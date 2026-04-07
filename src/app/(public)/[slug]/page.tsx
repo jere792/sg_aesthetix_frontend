@@ -149,23 +149,6 @@ export default async function LandingPage({ params }: LandingPageProps) {
             </div>
           </div>
 
-          {/* Franja precios — desktop */}
-          <div className="grid gap-px bg-neutral-300" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
-            {services.map((s) => (
-              <div
-                key={s.name}
-                className={`px-10 py-6 ${s.dark ? "bg-neutral-900 text-white" : "bg-white"}`}
-              >
-                <p className={`text-[9px] font-bold tracking-[0.18em] uppercase ${s.dark ? "text-white/40" : "text-neutral-400"}`}>
-                  {s.name}
-                </p>
-                <p className="mt-2 text-3xl font-black tracking-tight">{s.price}</p>
-                <p className={`mt-1 text-[9px] tracking-widest uppercase ${s.dark ? "text-white/40" : "text-neutral-400"}`}>
-                  {s.duration}
-                </p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
       {/* ── FIN HERO ──────────────────────────────────────────────────── */}
