@@ -7,15 +7,31 @@ type ReservarPageProps = {
 };
 
 const services = [
-  { name: "Corte clasico", duration: "45 min", price: "$18" },
-  { name: "Corte + barba", duration: "60 min", price: "$25" },
-  { name: "Afeitado premium", duration: "30 min", price: "$15" },
+  { 
+    id: "550e8400-e29b-41d4-a716-446655440000",
+    name: "Corte clásico", 
+    duration: "45 min", 
+    price: "$18" 
+  },
+  { 
+    id: "123e4567-e89b-12d3-a456-426614174001",
+    name: "Corte + Barba", 
+    duration: "60 min", 
+    price: "$25" 
+  }
 ];
 
 const barbers = [
-  { name: "Alejandro", role: "Master Barber" },
-  { name: "Matias", role: "Fade Specialist" },
-  { name: "Sergio", role: "Beard Artist" },
+  { 
+    id: "987e6543-e21b-12d3-a456-426614174000",
+    name: "Alejandro", 
+    role: "Master Barber" 
+  },
+  { 
+    id: "111e2222-e33b-44d4-a555-666677778888",
+    name: "Carlos", 
+    role: "Barbero" 
+  }
 ];
 
 const availableSlots = ["10:00", "11:30", "13:00", "15:30", "17:00", "18:30"];

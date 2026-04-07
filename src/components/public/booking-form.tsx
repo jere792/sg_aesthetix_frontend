@@ -2,14 +2,17 @@
 
 import { useMemo, useState } from "react";
 import { CalendarDays, CheckCircle2, Clock3, Scissors, UserRound } from "lucide-react";
+import { AppointmentsService } from "@/services/appointments.service";
 
 type BookingOption = {
+  id: string;
   name: string;
   duration: string;
   price: string;
 };
 
 type TeamMember = {
+  id: string;
   name: string;
   role: string;
 };
@@ -32,8 +35,8 @@ type BookingFormProps = {
 };
 
 type BookingDraft = {
-  service: string;
-  barber: string;
+  serviceId: string;
+  barberId: string;
   date: string;
   time: string;
   customerName: string;
@@ -42,8 +45,8 @@ type BookingDraft = {
 };
 
 const initialDraft: BookingDraft = {
-  service: "",
-  barber: "",
+  serviceId: "",
+  barberId: "",
   date: "",
   time: "",
   customerName: "",
@@ -65,12 +68,15 @@ export function BookingForm({
 }: BookingFormProps) {
   const [formData, setFormData] = useState<BookingDraft>({
     ...initialDraft,
-    service: services[0]?.name ?? "",
-    barber: barbers[0]?.name ?? "",
+    serviceId: services[0]?.id ?? "",
+    barberId: barbers[0]?.id ?? "",
     date: availableDates[0]?.value ?? "",
     time: availableSlots[0] ?? "",
   });
+  
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const monthOptions = useMemo(() => {
     const groupedMonths = new Map<
@@ -115,14 +121,15 @@ export function BookingForm({
   const [activeMonthKey, setActiveMonthKey] = useState(() => monthOptions[0]?.key ?? "");
 
   const selectedService = useMemo(
-    () => services.find((service) => service.name === formData.service),
-    [formData.service, services],
+    () => services.find((service) => service.id === formData.serviceId),
+    [formData.serviceId, services],
   );
 
   const selectedDate = useMemo(
     () => availableDates.find((date) => date.value === formData.date),
     [availableDates, formData.date],
   );
+  
   const selectedMonthKey = selectedDate ? buildMonthKey(parseCalendarDate(selectedDate.value)) : "";
 
   const activeMonth = useMemo(
@@ -155,17 +162,53 @@ export function BookingForm({
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-
     setFormData((current) => ({
       ...current,
       [name]: value,
     }));
     setIsSubmitted(false);
+    setError(""); // Limpiamos el error si el usuario modifica algo
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsSubmitted(true);
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const exactService = services.find((s) => s.id === formData.serviceId);
+      const exactBarber = barbers.find((b) => b.id === formData.barberId);
+
+      const serviceId = exactService?.id ?? "";
+      const employeeId = exactBarber?.id ?? "";
+      const duration = exactService?.duration ?? "30 min";
+
+      const endTimeHHMM = calculateEndTime(formData.time, duration);
+
+      const payload = {
+        id: crypto.randomUUID(), 
+        customerId: crypto.randomUUID(),
+        serviceId: serviceId,
+        employeeId: employeeId,
+        reservationDate: formData.date,
+        startTime: `${formData.time}:00`, 
+        endTime: `${endTimeHHMM}:00`,
+        channel: "landing",
+        status: "pendiente",
+        notes: `Nombre: ${formData.customerName} | Tel: ${formData.phone} | Email: ${formData.email}`,
+      };
+
+      console.log("🚀 Payload final enviado:", payload);
+
+      // 3. Llamamos al API Service
+      await AppointmentsService.createPublic(businessName, payload);
+
+      setIsSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al conectar con el servidor.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -183,14 +226,13 @@ export function BookingForm({
               Elige tu fecha y hora
             </h1>
             <p className="mt-3 text-sm leading-relaxed text-[var(--tenant-muted)] sm:text-base">
-              Simplificamos la reserva para que elijas el turno sin ruido. Esta
-              confirmacion sigue siendo local mientras conectamos disponibilidad real.
+              Simplificamos la reserva para que elijas el turno sin ruido. Confirmación rápida y segura.
             </p>
           </div>
 
           <div className="rounded-3xl border border-[var(--tenant-primary)]/15 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--tenant-primary)_12%,white),color-mix(in_srgb,var(--tenant-accent)_14%,white))] px-4 py-3 text-sm shadow-sm">
             <p className="font-semibold text-[var(--tenant-text)]">{businessName}</p>
-            <p className="mt-1 text-[var(--tenant-muted)]">Agenda visual y confirmacion rapida</p>
+            <p className="mt-1 text-[var(--tenant-muted)]">Agenda visual interactiva</p>
           </div>
         </div>
 
@@ -198,10 +240,10 @@ export function BookingForm({
           <div className="flex items-start gap-3 rounded-3xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-900">
             <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" />
             <div>
-              <p className="font-semibold">Turno listo para integracion</p>
+              <p className="font-semibold">¡Turno confirmado con éxito!</p>
               <p className="mt-1">
-                Simulamos la confirmacion para {formData.customerName || "tu reserva"} el{" "}
-                {selectedDate?.label ?? "dia elegido"} a las {formData.time}.
+                Hemos registrado tu reserva para el {selectedDate?.label ?? "día elegido"} a las {formData.time}. 
+                Te esperamos.
               </p>
             </div>
           </div>
@@ -222,14 +264,13 @@ export function BookingForm({
 
           <div className="grid gap-3">
             {services.map((service) => {
-              const isActive = formData.service === service.name;
-
+              const isActive = formData.serviceId === service.id;
               return (
                 <button
-                  key={service.name}
+                  key={service.id}
                   type="button"
                   onClick={() => {
-                    setFormData((current) => ({ ...current, service: service.name }));
+                    setFormData((current) => ({ ...current, serviceId: service.id }));
                     setIsSubmitted(false);
                   }}
                   className={`rounded-3xl border px-4 py-4 text-left transition ${
@@ -252,7 +293,6 @@ export function BookingForm({
             })}
           </div>
         </section>
-
         <section className="space-y-4 rounded-[1.75rem] border border-amber-200 bg-gradient-to-br from-white to-amber-50 p-5 sm:p-6">
           <div className="flex items-center gap-3">
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-[var(--tenant-primary)] text-white">
@@ -285,7 +325,6 @@ export function BookingForm({
             <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
               {monthOptions.map((month) => {
                 const isActive = month.key === activeMonth?.key;
-
                 return (
                   <button
                     key={month.key}
@@ -328,10 +367,7 @@ export function BookingForm({
                       type="button"
                       disabled={!isAvailable}
                       onClick={() => {
-                        if (!cell.availableDate) {
-                          return;
-                        }
-
+                        if (!cell.availableDate) return;
                         setFormData((current) => ({
                           ...current,
                           date: cell.availableDate?.value ?? current.date,
@@ -374,7 +410,6 @@ export function BookingForm({
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {availableSlots.map((slot) => {
                 const isActive = formData.time === slot;
-
                 return (
                   <button
                     key={slot}
@@ -425,7 +460,7 @@ export function BookingForm({
             </label>
 
             <label className="space-y-2">
-              <span className="text-sm font-medium">Telefono</span>
+              <span className="text-sm font-medium">Teléfono</span>
               <input
                 required
                 type="tel"
@@ -454,23 +489,26 @@ export function BookingForm({
 
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-[1.75rem] border border-black/10 bg-[linear-gradient(135deg,white,color-mix(in_srgb,var(--tenant-primary)_6%,white))] px-5 py-4">
           <p className="max-w-xl text-sm text-[var(--tenant-muted)]">
-            La reserva se confirma visualmente en esta etapa. Todavia no enviaremos
-            datos al backend.
+            Al confirmar, tu turno se agendará directamente en nuestro sistema.
           </p>
 
-          <button
-            type="submit"
-            className="inline-flex items-center justify-center rounded-full bg-[var(--tenant-primary)] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:opacity-95"
-          >
-            Confirmar turno
-          </button>
+          <div className="flex flex-col items-end gap-2">
+            <button
+              type="submit"
+              disabled={isLoading || isSubmitted}
+              className="inline-flex items-center justify-center rounded-full bg-[var(--tenant-primary)] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:opacity-95 disabled:opacity-50 disabled:hover:translate-y-0"
+            >
+              {isLoading ? "Procesando..." : isSubmitted ? "¡Confirmado!" : "Confirmar turno"}
+            </button>
+            {error && <span className="text-xs font-medium text-red-500">{error}</span>}
+          </div>
         </div>
       </form>
 
       <aside className="space-y-5">
         <div className="rounded-[2rem] border border-black/10 bg-[linear-gradient(145deg,white,color-mix(in_srgb,var(--tenant-primary)_8%,white),color-mix(in_srgb,var(--tenant-accent)_14%,white))] p-6 shadow-xl shadow-black/5 xl:sticky xl:top-6">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--tenant-muted)]">
-            Resumen rapido
+            Resumen rápido
           </p>
           <h2 className="mt-2 text-2xl font-bold tracking-tight">Tu cita</h2>
 
@@ -478,12 +516,12 @@ export function BookingForm({
             <SummaryRow
               icon={<Scissors className="h-4 w-4" />}
               label="Servicio"
-              value={formData.service}
+              value={formData.serviceId}
             />
             <SummaryRow
               icon={<UserRound className="h-4 w-4" />}
               label="Profesional"
-              value={formData.barber}
+              value={formData.barberId}
             />
             <SummaryRow
               icon={<CalendarDays className="h-4 w-4" />}
@@ -494,23 +532,23 @@ export function BookingForm({
           </div>
 
           <div className="mt-5 rounded-[1.75rem] bg-[linear-gradient(135deg,var(--tenant-primary),color-mix(in_srgb,var(--tenant-primary)_70%,var(--tenant-accent)))] px-5 py-5 text-white">
-            <p className="text-sm text-white/80">Inversion estimada</p>
+            <p className="text-sm text-white/80">Inversión estimada</p>
             <p className="mt-1 text-3xl font-bold">{selectedService?.price ?? "--"}</p>
-            <p className="mt-1 text-sm text-white/80">{selectedService?.duration ?? "Sin duracion"}</p>
+            <p className="mt-1 text-sm text-white/80">{selectedService?.duration ?? "Sin duración"}</p>
           </div>
 
           <div className="mt-5 rounded-[1.5rem] border border-black/10 bg-white/90 px-4 py-4">
             <p className="text-sm font-semibold">Profesional asignado</p>
             <div className="mt-3 flex flex-wrap gap-2">
               {barbers.map((barber) => {
-                const isActive = formData.barber === barber.name;
+                const isActive = formData.barberId === barber.id;
 
                 return (
                   <button
-                    key={barber.name}
+                    key={barber.id}
                     type="button"
                     onClick={() => {
-                      setFormData((current) => ({ ...current, barber: barber.name }));
+                      setFormData((current) => ({ ...current, barberId: barber.id }));
                       setIsSubmitted(false);
                     }}
                     className={`rounded-full border px-3 py-2 text-sm transition ${
@@ -557,10 +595,20 @@ function SummaryRow({
 
 function parseCalendarDate(value: string) {
   const [year, month, day] = value.split("-").map(Number);
-
   return new Date(year, month - 1, day);
 }
 
 function buildMonthKey(date: Date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function calculateEndTime(startTime: string, durationString: string): string {
+  if (!startTime) return "";
+  const minutesToAdd = parseInt(durationString.replace(/\D/g, "")) || 30; // 30 por defecto
+  const [hours, minutes] = startTime.split(":").map(Number);
+  
+  const dateObj = new Date();
+  dateObj.setHours(hours, minutes + minutesToAdd);
+  
+  return `${String(dateObj.getHours()).padStart(2, "0")}:${String(dateObj.getMinutes()).padStart(2, "0")}`;
 }
