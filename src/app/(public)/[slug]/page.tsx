@@ -295,7 +295,7 @@ export default function LandingPage({ slug }: LandingPageProps) {
               muted
               loop
               playsInline
-              className="h-full w-full object-cover opacity-90"
+              className="h-full w-full object-cover opacity-94"
               src="https://res.cloudinary.com/dp1vgjhsq/video/upload/v1777105289/WhatsApp_Video_2026-04-25_at_3.11.00_AM_1_aroels.mp4"
             />
             <span className="absolute bottom-5 left-5 bg-black/80 px-4 py-2 text-[10px] font-bold tracking-[0.2em] uppercase text-white">
