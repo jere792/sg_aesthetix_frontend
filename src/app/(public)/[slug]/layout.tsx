@@ -39,7 +39,7 @@ export default async function PublicLandingLayout({
   const basePath = `/${tenant.slug}`;
 
   const footer = (
-    <footer className="mt-auto px-6 pb-8 max-w-6xl mx-auto w-full">
+    <footer className="mt-auto px-6 pb-8 max-w-[1400px] mx-auto w-full">
       {/* Tarjeta principal */}
       <div className="relative bg-[var(--background-secondary)] border border-transparent/10 rounded-3xl px-8 py-12 flex flex-col md:flex-row justify-between items-start gap-8 overflow-visible">
         <div className="hidden md:block absolute -top-5 -left-6 w-[80px] scale-75 opacity-80 dark:invert dark:opacity-60">
@@ -68,7 +68,7 @@ export default async function PublicLandingLayout({
         <div className="flex flex-col sm:flex-row gap-8 md:gap-16">
           {/* Navegar */}
           <div className="flex flex-col gap-3">
-            <h4 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
               Navegar
             </h4>
             <div className="flex flex-col gap-2 text-sm text-[var(--text-muted)]">
@@ -107,7 +107,7 @@ export default async function PublicLandingLayout({
 
           {/* Reservas */}
           <div className="flex flex-col gap-3">
-            <h4 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
               Reservas
             </h4>
             <div className="flex flex-col gap-2 text-sm text-[var(--text-muted)]">
@@ -125,7 +125,7 @@ export default async function PublicLandingLayout({
               </Link>
               <span className="text-[var(--text-muted)] cursor-default">
                 App móvil{" "}
-                <span className="inline-flex ml-1 py-0.5 px-2 bg-[var(--background)] text-[9px] rounded-full -rotate-1">
+                <span className="inline-flex ml-1 py-0.5 px-2 bg-[var(--background)] text-[10px] rounded-full -rotate-1">
                   pronto
                 </span>
               </span>
@@ -134,7 +134,7 @@ export default async function PublicLandingLayout({
 
           {/* Legal */}
           <div className="flex flex-col gap-3">
-            <h4 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
               Legal
             </h4>
             <div className="flex flex-col gap-2 text-sm text-[var(--text-muted)]">

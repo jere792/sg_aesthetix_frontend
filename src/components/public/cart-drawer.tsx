@@ -51,7 +51,7 @@ export function CartDrawer() {
         {/* Header */}
         <div className="flex items-center justify-between border-b border-transparent/10 px-6 py-5">
           <div>
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
               Tienda
             </p>
             <h2 className="mt-1 text-lg font-bold uppercase tracking-tight">

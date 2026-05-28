@@ -123,7 +123,7 @@ export function CustomerAuthModal() {
           <div className="px-6 py-8 text-center space-y-4">
             <p className="text-sm text-neutral-500">Bienvenido, <strong>{session.nombres}</strong></p>
             <p className="text-4xl font-black tracking-tight">{session.puntosDisponibles}</p>
-            <p className="text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
               Puntos disponibles
             </p>
             <div className="flex gap-2">
@@ -145,11 +145,11 @@ export function CustomerAuthModal() {
           </div>
         ) : tab === "cliente" ? (
           <form onSubmit={handleCustomerLogin} className="px-6 py-8 space-y-4">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)] text-center mb-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)] text-center mb-4">
               Ingresa con tu DNI y email
             </p>
             <label className="space-y-1.5 block">
-              <span className="text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">Email</span>
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">Email</span>
               <input
                 required
                 type="email"
@@ -160,7 +160,7 @@ export function CustomerAuthModal() {
               />
             </label>
             <label className="space-y-1.5 block">
-              <span className="text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">DNI</span>
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">DNI</span>
               <input
                 required
                 type="text"
@@ -181,11 +181,11 @@ export function CustomerAuthModal() {
           </form>
         ) : (
           <form onSubmit={handleAdminLogin} className="px-6 py-8 space-y-4">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)] text-center mb-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)] text-center mb-4">
               Acceso administrativo
             </p>
             <label className="space-y-1.5 block">
-              <span className="text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">Email</span>
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">Email</span>
               <input
                 required
                 type="email"
@@ -196,7 +196,7 @@ export function CustomerAuthModal() {
               />
             </label>
             <label className="space-y-1.5 block">
-              <span className="text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">Contraseña</span>
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">Contraseña</span>
               <input
                 required
                 type="password"
@@ -222,7 +222,7 @@ export function CustomerAuthModal() {
           <a
             href="/promocion"
             onClick={(e) => { e.preventDefault(); closeModal(); }}
-            className="text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--foreground)] transition"
+            className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--foreground)] transition"
           >
             ¿No tienes cuenta? Regístrate aquí
           </a>

@@ -57,7 +57,7 @@ export function ProductCard({
 
       <div className="space-y-4">
         <p
-          className={`text-[9px] font-semibold uppercase tracking-[0.22em] ${
+          className={`text-[10px] font-semibold uppercase tracking-[0.22em] ${
             featured ? "text-[var(--tenant-primary)]" : "text-[var(--text-muted)]"
           }`}
         >
@@ -102,7 +102,7 @@ export function ProductCard({
           </span>
           {puntos > 0 && (
             <p
-              className={`mt-1 text-[9px] font-semibold uppercase tracking-widest ${
+              className={`mt-1 text-[10px] font-semibold uppercase tracking-widest ${
                 featured ? "text-white/40" : "text-[var(--text-muted)]"
               }`}
             >

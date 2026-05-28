@@ -25,7 +25,7 @@ export function PublicLayoutShell({ children, slug, basePath, brandName, footer 
   return (
     <>
       <NavbarPublic slug={slug} basePath={basePath} brandName={brandName} />
-      <main className="mx-auto w-full max-w-6xl px-6">
+      <main className="mx-auto w-full max-w-[1400px] px-6">
         {children}
       </main>
       {footer}

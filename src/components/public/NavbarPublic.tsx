@@ -72,7 +72,7 @@ export function NavbarPublic({ slug, basePath, brandName }: Props) {
         >
           <UserIcon size={18} />
           {customerSession !== null && (
-            <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-[16px] items-center justify-center bg-[var(--tenant-primary)] text-white text-[9px] font-bold px-1">
+            <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-[16px] items-center justify-center bg-[var(--tenant-primary)] text-white text-[10px] font-bold px-1">
               {customerPoints}
             </span>
           )}
@@ -106,7 +106,7 @@ export function NavbarPublic({ slug, basePath, brandName }: Props) {
         className="relative z-30 border-b border-transparent/5 bg-[var(--background-secondary)]"
       >
         <div
-          className={`mx-auto flex w-full max-w-6xl items-center justify-between px-4 transition-all sm:px-6 ${
+          className={`mx-auto flex w-full max-w-[1400px] items-center justify-between px-4 transition-all sm:px-6 ${
             scrolled ? "py-2 sm:py-2.5" : "py-3 sm:py-4"
           }`}
         >
@@ -192,7 +192,7 @@ export function NavbarPublic({ slug, basePath, brandName }: Props) {
             >
               <UserIcon size={20} />
               {customerSession !== null && (
-                <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-[16px] items-center justify-center bg-[var(--tenant-primary)] text-white text-[9px] font-bold px-1">
+                <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-[16px] items-center justify-center bg-[var(--tenant-primary)] text-white text-[10px] font-bold px-1">
                   {customerSession.puntosDisponibles}
                 </span>
               )}
@@ -295,7 +295,7 @@ export function NavbarPublic({ slug, basePath, brandName }: Props) {
                 >
                   <UserIcon size={16} /> · Mis Puntos
                   {customerSession !== null && (
-                    <span className="flex h-4 min-w-[16px] items-center justify-center bg-[var(--tenant-primary)] text-white text-[9px] font-bold px-1">
+                    <span className="flex h-4 min-w-[16px] items-center justify-center bg-[var(--tenant-primary)] text-white text-[10px] font-bold px-1">
                       {customerSession.puntosDisponibles}
                     </span>
                   )}

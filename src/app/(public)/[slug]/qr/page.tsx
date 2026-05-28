@@ -15,7 +15,7 @@ export default async function QrPage({ params }: Props) {
         style={{ background: "#324730" }}
       />
       <p
-        className="mb-1 text-[9px] font-semibold uppercase tracking-[0.2em]"
+        className="mb-1 text-[10px] font-semibold uppercase tracking-[0.2em]"
         style={{ color: "#324730" }}
       >
         For Men Castilla

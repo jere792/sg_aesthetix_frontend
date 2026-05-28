@@ -399,7 +399,7 @@ export function BookingForm({
           </div>
           <div className="border border-transparent/10 bg-[var(--background-secondary)] px-4 py-3">
             <p className="text-sm font-bold uppercase tracking-tight">{businessName}</p>
-            <p className="mt-0.5 text-[9px] uppercase tracking-widest text-[var(--text-muted)]">
+            <p className="mt-0.5 text-[10px] uppercase tracking-widest text-[var(--text-muted)]">
               Agenda visual
             </p>
           </div>
@@ -450,7 +450,7 @@ export function BookingForm({
                     <div>
                       <p className="text-sm font-bold uppercase tracking-tight">{service.name}</p>
                       <p
-                        className={`mt-0.5 text-[9px] uppercase tracking-widest ${
+                        className={`mt-0.5 text-[10px] uppercase tracking-widest ${
                           isActive ? "text-white/40" : "text-[var(--text-muted)]"
                         }`}
                       >
@@ -491,7 +491,7 @@ export function BookingForm({
                     key={month.key}
                     type="button"
                     onClick={() => setActiveMonthKey(month.key)}
-                    className={`px-3 py-1.5 text-[9px] font-semibold uppercase tracking-widest transition ${
+                    className={`px-3 py-1.5 text-[10px] font-semibold uppercase tracking-widest transition ${
                       isActive
                         ? "bg-black text-white"
                         : "bg-[var(--background)] text-[var(--text-muted)] hover:bg-[var(--background)] hover:text-[var(--foreground)]"
@@ -508,7 +508,7 @@ export function BookingForm({
             {calendarWeekdays.map((wd) => (
               <div
                 key={wd}
-                className="bg-[var(--background-secondary)] py-2 text-center text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)]"
+                className="bg-[var(--background-secondary)] py-2 text-center text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]"
               >
                 {wd}
               </div>
@@ -549,7 +549,7 @@ export function BookingForm({
             })}
           </div>
 
-          <p className="mt-3 text-[9px] uppercase tracking-widest text-[var(--text-muted)]">
+          <p className="mt-3 text-[10px] uppercase tracking-widest text-[var(--text-muted)]">
             {availableSlots.length} horarios disponibles ·{" "}
             {selectedDate?.label ?? "Selecciona un día"}
           </p>
@@ -682,7 +682,7 @@ export function BookingForm({
         <div className="xl:sticky xl:top-6">
 
           <div className="border-b border-transparent/10 px-6 py-8">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
               Resumen
             </p>
             <h2 className="mt-2 text-xl font-bold uppercase tracking-tight">Tu cita</h2>
@@ -699,19 +699,19 @@ export function BookingForm({
           </div>
 
           <div className="bg-[var(--background)] px-6 py-6 text-white">
-            <p className="text-[9px] font-semibold uppercase tracking-widest text-white/40">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-white/40">
               Inversión
             </p>
             <p className="mt-2 text-4xl font-black tracking-tight">
               {selectedService?.price ?? "--"}
             </p>
-            <p className="mt-1 text-[9px] uppercase tracking-widest text-white/40">
+            <p className="mt-1 text-[10px] uppercase tracking-widest text-white/40">
               {selectedService?.duration ?? "Sin duración"}
             </p>
           </div>
 
           <div className="px-6 py-6">
-            <p className="mb-3 text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
+            <p className="mb-3 text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
               Profesional
             </p>
             <div className="grid gap-px bg-[var(--background)]">
@@ -731,7 +731,7 @@ export function BookingForm({
                   >
                     <p className="text-sm font-bold uppercase tracking-tight">{barber.name}</p>
                     <p
-                      className={`mt-0.5 text-[9px] uppercase tracking-widest ${
+                      className={`mt-0.5 text-[10px] uppercase tracking-widest ${
                         isActive ? "text-white/40" : "text-[var(--text-muted)]"
                       }`}
                     >
@@ -751,7 +751,7 @@ export function BookingForm({
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between px-6 py-4">
-      <p className="text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">{label}</p>
+      <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">{label}</p>
       <p className="text-sm font-bold uppercase tracking-tight">{value}</p>
     </div>
   );
