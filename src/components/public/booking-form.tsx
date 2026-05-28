@@ -59,7 +59,7 @@ const initialDraft: BookingDraft = {
 };
 
 const inputClassName =
-  "w-full border border-black/10 bg-white px-4 py-3 text-sm text-[var(--tenant-text)] outline-none transition placeholder:text-[var(--tenant-muted)] focus:border-black focus:ring-0";
+  "w-full border border-transparent/10 bg-[var(--background-secondary)] px-4 py-3.5 text-base text-[var(--foreground)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-black focus:ring-0";
 
 const calendarWeekdays = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 
@@ -288,13 +288,13 @@ export function BookingForm({
   return stage === "dni" || stage === "register" ? (
     <div className="mx-auto max-w-md px-4 py-12">
       <div className="mb-8 text-center">
-        <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
           {businessName}
         </p>
-        <h1 className="mt-2 text-2xl font-bold tracking-tight">
+        <h1 className="mt-2 text-3xl font-bold tracking-tight">
           {stage === "dni" ? "Reserva online" : "Completa tus datos"}
         </h1>
-        <p className="mt-2 text-sm leading-relaxed text-neutral-500">
+        <p className="mt-2 text-base leading-relaxed text-[var(--text-muted)]">
           {stage === "dni"
             ? "Ingresa tu DNI para agilizar la reserva."
             : "Llena los campos para registrarte."}
@@ -310,7 +310,7 @@ export function BookingForm({
       {stage === "dni" && (
         <form onSubmit={handleDniLookup} className="space-y-4">
           <label className="space-y-2">
-            <span className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400">
+            <span className="text-[11px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
               Número de DNI
             </span>
             <input
@@ -325,7 +325,7 @@ export function BookingForm({
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-black px-8 py-3 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition hover:opacity-75 disabled:opacity-40"
+            className="w-full bg-black px-8 py-3.5 text-xs font-bold uppercase tracking-[0.15em] text-white transition hover:opacity-75 disabled:opacity-40"
           >
             {isLoading ? "Buscando..." : "Buscar"}
           </button>
@@ -335,7 +335,7 @@ export function BookingForm({
       {stage === "register" && (
         <form onSubmit={handleRegister} className="space-y-4">
           <label className="space-y-2">
-            <span className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
               Nombre completo
             </span>
             <input
@@ -348,7 +348,7 @@ export function BookingForm({
             />
           </label>
           <label className="space-y-2">
-            <span className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
               Teléfono
             </span>
             <input
@@ -361,7 +361,7 @@ export function BookingForm({
             />
           </label>
           <label className="space-y-2">
-            <span className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
               Email
             </span>
             <input
@@ -376,7 +376,7 @@ export function BookingForm({
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-black px-8 py-3 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition hover:opacity-75 disabled:opacity-40"
+            className="w-full bg-black px-8 py-3.5 text-xs font-bold uppercase tracking-[0.15em] text-white transition hover:opacity-75 disabled:opacity-40"
           >
             {isLoading ? "Registrando..." : "Continuar"}
           </button>
@@ -384,29 +384,29 @@ export function BookingForm({
       )}
     </div>
   ) : (
-    <div className="grid gap-px bg-neutral-200 xl:grid-cols-[1.2fr_0.72fr]">
-      <form onSubmit={handleSubmit} className="space-y-0 bg-white">
+    <div className="grid gap-px bg-[var(--background)] xl:grid-cols-[1.2fr_0.72fr]">
+      <form onSubmit={handleSubmit} className="space-y-0 bg-[var(--background-secondary)]">
 
-        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-black/10 px-8 py-8">
+        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-transparent/10 px-8 py-8">
           <div>
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
               Reserva online
             </p>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight">Elige tu fecha y hora</h1>
-            <p className="mt-2 text-sm leading-relaxed text-neutral-500">
+            <h1 className="mt-2 text-4xl font-bold tracking-tight">Elige tu fecha y hora</h1>
+            <p className="mt-2 text-base leading-relaxed text-[var(--text-muted)]">
               Confirmación rápida, sin esperas ni llamadas.
             </p>
           </div>
-          <div className="border border-black/10 bg-neutral-50 px-4 py-3">
+          <div className="border border-transparent/10 bg-[var(--background-secondary)] px-4 py-3">
             <p className="text-sm font-bold uppercase tracking-tight">{businessName}</p>
-            <p className="mt-0.5 text-[9px] uppercase tracking-widest text-neutral-400">
+            <p className="mt-0.5 text-[9px] uppercase tracking-widest text-[var(--text-muted)]">
               Agenda visual
             </p>
           </div>
         </div>
 
         {isSubmitted && (
-          <div className="flex items-start gap-3 border-b border-black/10 bg-neutral-900 px-8 py-5 text-white">
+          <div className="flex items-start gap-3 border-b border-transparent/10 bg-[var(--background)] px-8 py-5 text-white">
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
             <div>
               <p className="text-sm font-bold uppercase tracking-tight">¡Turno confirmado!</p>
@@ -418,7 +418,7 @@ export function BookingForm({
           </div>
         )}
 
-        <div className="border-b border-black/10 px-8 py-8">
+        <div className="border-b border-transparent/10 px-8 py-8">
           <div className="mb-5 flex items-center gap-3">
             <div className="flex h-6 w-6 shrink-0 items-center justify-center bg-black text-[10px] font-bold text-white">
               1
@@ -426,7 +426,7 @@ export function BookingForm({
             <p className="text-sm font-bold uppercase tracking-tight">Servicio</p>
           </div>
 
-          <div className="grid gap-px bg-neutral-200">
+          <div className="grid gap-px bg-[var(--background)]">
             {services.map((service) => {
               const isActive = formData.serviceId === service.id;
               return (
@@ -438,20 +438,20 @@ export function BookingForm({
                     setIsSubmitted(false);
                   }}
                   className={`flex items-center justify-between px-5 py-4 text-left transition ${
-                    isActive ? "bg-neutral-900 text-white" : "bg-white hover:bg-neutral-50"
+                    isActive ? "bg-[var(--background)] text-white" : "bg-[var(--background-secondary)] hover:bg-[var(--background-secondary)]"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <div
                       className={`h-2 w-2 shrink-0 ${
-                        isActive ? "bg-white" : "border border-black/20 bg-transparent"
+                        isActive ? "bg-[var(--background-secondary)]" : "border border-transparent/20 bg-transparent"
                       }`}
                     />
                     <div>
                       <p className="text-sm font-bold uppercase tracking-tight">{service.name}</p>
                       <p
                         className={`mt-0.5 text-[9px] uppercase tracking-widest ${
-                          isActive ? "text-white/40" : "text-neutral-400"
+                          isActive ? "text-white/40" : "text-[var(--text-muted)]"
                         }`}
                       >
                         {service.duration}
@@ -471,7 +471,7 @@ export function BookingForm({
           </div>
         </div>
 
-        <div className="border-b border-black/10 px-8 py-8">
+        <div className="border-b border-transparent/10 px-8 py-8">
           <div className="mb-5 flex items-center gap-3">
             <div className="flex h-6 w-6 shrink-0 items-center justify-center bg-black text-[10px] font-bold text-white">
               2
@@ -479,7 +479,7 @@ export function BookingForm({
             <p className="text-sm font-bold uppercase tracking-tight">Fecha</p>
           </div>
 
-          <div className="mb-4 flex items-center justify-between border-b border-black/10 pb-4">
+          <div className="mb-4 flex items-center justify-between border-b border-transparent/10 pb-4">
             <p className="text-sm font-bold uppercase tracking-tight">
               {activeMonth?.label ?? ""}
             </p>
@@ -494,7 +494,7 @@ export function BookingForm({
                     className={`px-3 py-1.5 text-[9px] font-semibold uppercase tracking-widest transition ${
                       isActive
                         ? "bg-black text-white"
-                        : "bg-neutral-100 text-neutral-400 hover:bg-neutral-200 hover:text-black"
+                        : "bg-[var(--background)] text-[var(--text-muted)] hover:bg-[var(--background)] hover:text-[var(--foreground)]"
                     }`}
                   >
                     {month.label}
@@ -504,11 +504,11 @@ export function BookingForm({
             </div>
           </div>
 
-          <div className="grid grid-cols-7 gap-px bg-neutral-200">
+          <div className="grid grid-cols-7 gap-px bg-[var(--background)]">
             {calendarWeekdays.map((wd) => (
               <div
                 key={wd}
-                className="bg-neutral-50 py-2 text-center text-[9px] font-semibold uppercase tracking-widest text-neutral-400"
+                className="bg-[var(--background-secondary)] py-2 text-center text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)]"
               >
                 {wd}
               </div>
@@ -516,7 +516,7 @@ export function BookingForm({
 
             {calendarCells.map((cell, index) => {
               if (!cell) {
-                return <div key={`empty-${index}`} className="bg-white" />;
+                return <div key={`empty-${index}`} className="bg-[var(--background-secondary)]" />;
               }
 
               const isActive = formData.date === cell.availableDate?.value;
@@ -539,8 +539,8 @@ export function BookingForm({
                     isActive
                       ? "bg-black text-white"
                       : isAvailable
-                        ? "bg-white text-black hover:bg-neutral-100"
-                        : "bg-white text-neutral-200 cursor-default"
+                        ? "bg-[var(--background-secondary)] text-[var(--foreground)] hover:bg-[var(--background)]"
+                        : "bg-[var(--background-secondary)] text-[var(--text-muted)] cursor-default"
                   }`}
                 >
                   {String(cell.dayNumber).padStart(2, "0")}
@@ -549,13 +549,13 @@ export function BookingForm({
             })}
           </div>
 
-          <p className="mt-3 text-[9px] uppercase tracking-widest text-neutral-400">
+          <p className="mt-3 text-[9px] uppercase tracking-widest text-[var(--text-muted)]">
             {availableSlots.length} horarios disponibles ·{" "}
             {selectedDate?.label ?? "Selecciona un día"}
           </p>
         </div>
 
-        <div className="border-b border-black/10 px-8 py-8">
+        <div className="border-b border-transparent/10 px-8 py-8">
           <div className="mb-5 flex items-center gap-3">
             <div className="flex h-6 w-6 shrink-0 items-center justify-center bg-black text-[10px] font-bold text-white">
               3
@@ -563,7 +563,7 @@ export function BookingForm({
             <p className="text-sm font-bold uppercase tracking-tight">Horario</p>
           </div>
 
-          <div className="grid grid-cols-3 gap-px bg-neutral-200 sm:grid-cols-4 lg:grid-cols-6">
+          <div className="grid grid-cols-3 gap-px bg-[var(--background)] sm:grid-cols-4 lg:grid-cols-6">
             {availableSlots.map((slot) => {
               const isActive = formData.time === slot;
               return (
@@ -576,8 +576,8 @@ export function BookingForm({
                   }}
                   className={`py-3 text-center text-xs font-bold uppercase tracking-wide transition ${
                     isActive
-                      ? "bg-neutral-900 text-white"
-                      : "bg-white text-black hover:bg-neutral-50"
+                      ? "bg-[var(--background)] text-white"
+                      : "bg-[var(--background-secondary)] text-[var(--foreground)] hover:bg-[var(--background-secondary)]"
                   }`}
                 >
                   {slot}
@@ -597,7 +597,7 @@ export function BookingForm({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="space-y-2 sm:col-span-2">
-              <span className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
                 Nombre completo
               </span>
               <input
@@ -612,7 +612,7 @@ export function BookingForm({
             </label>
 
             <label className="space-y-2">
-              <span className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
                 Teléfono
               </span>
               <input
@@ -627,7 +627,7 @@ export function BookingForm({
             </label>
 
             <label className="space-y-2">
-              <span className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
                 Email
               </span>
               <input
@@ -642,8 +642,8 @@ export function BookingForm({
             </label>
 
             <label className="space-y-2 sm:col-span-2">
-              <span className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400">
-                DNI <span className="text-neutral-300">(opcional)</span>
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
+                DNI <span className="text-[var(--text-muted)]">(opcional)</span>
               </span>
               <input
                 type="text"
@@ -656,8 +656,8 @@ export function BookingForm({
             </label>
           </div>
 
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-black/10 pt-6">
-            <p className="text-[10px] uppercase tracking-widest text-neutral-400">
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-transparent/10 pt-6">
+            <p className="text-[10px] uppercase tracking-widest text-[var(--text-muted)]">
               Al confirmar, tu turno se agendará en nuestro sistema.
             </p>
             <div className="flex flex-col items-end gap-2">
@@ -678,11 +678,11 @@ export function BookingForm({
         </div>
       </form>
 
-      <aside className="bg-neutral-50">
+      <aside className="bg-[var(--background-secondary)]">
         <div className="xl:sticky xl:top-6">
 
-          <div className="border-b border-black/10 px-6 py-8">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
+          <div className="border-b border-transparent/10 px-6 py-8">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
               Resumen
             </p>
             <h2 className="mt-2 text-xl font-bold uppercase tracking-tight">Tu cita</h2>
@@ -698,7 +698,7 @@ export function BookingForm({
             <SummaryRow label="Hora" value={formData.time || "Pendiente"} />
           </div>
 
-          <div className="bg-neutral-900 px-6 py-6 text-white">
+          <div className="bg-[var(--background)] px-6 py-6 text-white">
             <p className="text-[9px] font-semibold uppercase tracking-widest text-white/40">
               Inversión
             </p>
@@ -711,10 +711,10 @@ export function BookingForm({
           </div>
 
           <div className="px-6 py-6">
-            <p className="mb-3 text-[9px] font-semibold uppercase tracking-widest text-neutral-400">
+            <p className="mb-3 text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
               Profesional
             </p>
-            <div className="grid gap-px bg-neutral-200">
+            <div className="grid gap-px bg-[var(--background)]">
               {barbers.map((barber) => {
                 const isActive = formData.barberId === barber.id;
                 return (
@@ -726,13 +726,13 @@ export function BookingForm({
                       setIsSubmitted(false);
                     }}
                     className={`px-4 py-3 text-left transition ${
-                      isActive ? "bg-neutral-900 text-white" : "bg-white hover:bg-neutral-50"
+                      isActive ? "bg-[var(--background)] text-white" : "bg-[var(--background-secondary)] hover:bg-[var(--background-secondary)]"
                     }`}
                   >
                     <p className="text-sm font-bold uppercase tracking-tight">{barber.name}</p>
                     <p
                       className={`mt-0.5 text-[9px] uppercase tracking-widest ${
-                        isActive ? "text-white/40" : "text-neutral-400"
+                        isActive ? "text-white/40" : "text-[var(--text-muted)]"
                       }`}
                     >
                       {barber.role}
@@ -751,7 +751,7 @@ export function BookingForm({
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between px-6 py-4">
-      <p className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400">{label}</p>
+      <p className="text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">{label}</p>
       <p className="text-sm font-bold uppercase tracking-tight">{value}</p>
     </div>
   );

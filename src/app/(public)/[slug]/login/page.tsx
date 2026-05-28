@@ -31,7 +31,7 @@ export default function LoginPage() {
   // Esperar a que el contexto esté listo
   if (!isReady) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#0a0a0a]">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--background)]">
         <div className="h-4 w-4 animate-pulse rounded-full bg-white/20" />
       </div>
     );
@@ -39,7 +39,7 @@ export default function LoginPage() {
 
   if (redirecting) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#0a0a0a]">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--background)]">
         <p className="text-[10px] tracking-[0.2em] uppercase text-white/30">
           Redirigiendo...
         </p>
@@ -71,7 +71,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#0a0a0a]">
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[var(--background)]">
       {/* Fondo punteado */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.12]"

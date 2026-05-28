@@ -1,19 +1,52 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F5F5F5;
+  --background-secondary: #FFFFFF;
+  --background-tertiary: #E8E8E8;
+  --foreground: #1A1A1A;
+  --text-secondary: #3A5A36;
+  --text-tertiary: #222D20;
+  --text-muted: #64748B;
+  --hover: #3A5A36;
+  --warning: #D32F2F;
+  --border: #E0E0E0;
+  --font-headline: var(--font-archivo-narrow);
+  --font-body: var(--font-hanken-grotesk);
+  --font-label: var(--font-geist-sans);
+}
+
+.dark {
+  --background: #1E1E1E;
+  --background-secondary: #242424;
+  --background-tertiary: #2A2A2A;
+  --foreground: #E5E2E1;
+  --text-secondary: #4A7A46;
+  --text-tertiary: #3A4A36;
+  --text-muted: #BCC8D4;
+  --hover: #3A5A36;
+  --warning: #F8ACA2;
+  --border: transparent;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
+  --color-background-tertiary: var(--background-tertiary);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-muted: var(--text-muted);
+  --color-hover: var(--hover);
+  --color-warning: var(--warning);
+  --color-border: var(--border);
+  --font-headline: var(--font-headline);
+  --font-body: var(--font-body);
+  --font-label: var(--font-label);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
 }

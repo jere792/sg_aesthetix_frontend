@@ -82,27 +82,27 @@ export function CustomerAuthModal() {
   };
 
   const inputClassName =
-    "w-full border border-black/10 bg-white px-4 py-3 text-sm outline-none transition placeholder:text-neutral-400 focus:border-black";
+    "w-full border border-transparent/10/10 bg-[var(--background-secondary)] px-4 py-3 text-sm outline-none transition placeholder:text-[var(--text-muted)] focus:border-transparent/10";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={closeModal} />
-      <div className="relative w-full max-w-sm border border-black/10 bg-white shadow-2xl">
+      <div className="relative w-full max-w-sm border border-transparent/10/10 bg-[var(--background-secondary)] shadow-2xl">
         <button
           type="button"
           onClick={closeModal}
-          className="absolute right-3 top-3 flex items-center justify-center border border-black/10 p-1.5 text-neutral-400 hover:text-black transition"
+          className="absolute right-3 top-3 flex items-center justify-center border border-transparent/10/10 p-1.5 text-[var(--text-muted)] hover:text-[var(--foreground)] transition"
         >
           <X size="14" />
         </button>
 
         {/* Tabs */}
-        <div className="flex border-b border-black/10">
+        <div className="flex border-b border-transparent/10/10">
           <button
             type="button"
             onClick={() => setTab("cliente")}
             className={`flex-1 py-3 text-[10px] font-bold uppercase tracking-[0.15em] transition ${
-              tab === "cliente" ? "bg-black text-white" : "bg-neutral-50 text-neutral-500 hover:text-black"
+              tab === "cliente" ? "bg-black text-white" : "bg-[var(--background)] text-neutral-500 hover:text-[var(--foreground)]"
             }`}
           >
             Cliente
@@ -111,7 +111,7 @@ export function CustomerAuthModal() {
             type="button"
             onClick={() => setTab("admin")}
             className={`flex-1 py-3 text-[10px] font-bold uppercase tracking-[0.15em] transition ${
-              tab === "admin" ? "bg-black text-white" : "bg-neutral-50 text-neutral-500 hover:text-black"
+              tab === "admin" ? "bg-black text-white" : "bg-[var(--background)] text-neutral-500 hover:text-[var(--foreground)]"
             }`}
           >
             Admin
@@ -123,14 +123,14 @@ export function CustomerAuthModal() {
           <div className="px-6 py-8 text-center space-y-4">
             <p className="text-sm text-neutral-500">Bienvenido, <strong>{session.nombres}</strong></p>
             <p className="text-4xl font-black tracking-tight">{session.puntosDisponibles}</p>
-            <p className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400">
+            <p className="text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">
               Puntos disponibles
             </p>
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => { refreshPoints(); }}
-                className="flex-1 border border-black/15 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.15em] transition hover:bg-neutral-50"
+                className="flex-1 border border-transparent/10/15 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.15em] transition hover:bg-[var(--background)]"
               >
                 Actualizar
               </button>
@@ -145,11 +145,11 @@ export function CustomerAuthModal() {
           </div>
         ) : tab === "cliente" ? (
           <form onSubmit={handleCustomerLogin} className="px-6 py-8 space-y-4">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-neutral-400 text-center mb-4">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)] text-center mb-4">
               Ingresa con tu DNI y email
             </p>
             <label className="space-y-1.5 block">
-              <span className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400">Email</span>
+              <span className="text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">Email</span>
               <input
                 required
                 type="email"
@@ -160,7 +160,7 @@ export function CustomerAuthModal() {
               />
             </label>
             <label className="space-y-1.5 block">
-              <span className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400">DNI</span>
+              <span className="text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">DNI</span>
               <input
                 required
                 type="text"
@@ -181,11 +181,11 @@ export function CustomerAuthModal() {
           </form>
         ) : (
           <form onSubmit={handleAdminLogin} className="px-6 py-8 space-y-4">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-neutral-400 text-center mb-4">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)] text-center mb-4">
               Acceso administrativo
             </p>
             <label className="space-y-1.5 block">
-              <span className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400">Email</span>
+              <span className="text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">Email</span>
               <input
                 required
                 type="email"
@@ -196,7 +196,7 @@ export function CustomerAuthModal() {
               />
             </label>
             <label className="space-y-1.5 block">
-              <span className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400">Contraseña</span>
+              <span className="text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)]">Contraseña</span>
               <input
                 required
                 type="password"
@@ -218,11 +218,11 @@ export function CustomerAuthModal() {
         )}
 
         {/* Pie */}
-        <div className="border-t border-black/10 px-6 py-3 text-center">
+        <div className="border-t border-transparent/10/10 px-6 py-3 text-center">
           <a
             href="/promocion"
             onClick={(e) => { e.preventDefault(); closeModal(); }}
-            className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400 hover:text-black transition"
+            className="text-[9px] font-semibold uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--foreground)] transition"
           >
             ¿No tienes cuenta? Regístrate aquí
           </a>

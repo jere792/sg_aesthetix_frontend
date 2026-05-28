@@ -19,25 +19,25 @@ export default async function ProductosPage({ params }: ProductosPageProps) {
   const categories = ["Todos", "Fijación", "Barba", "Afeitado"];
 
   return (
-    <section className="space-y-10">
+    <section className="space-y-10 pt-8">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[var(--tenant-muted)]">Tienda</p>
-          <h1 className="mt-2 text-4xl font-black uppercase tracking-tight sm:text-5xl">Productos</h1>
-          <p className="mt-3 max-w-md text-sm font-light leading-relaxed text-[var(--tenant-muted)]">
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--text-muted)]">Tienda</p>
+          <h1 className="mt-2 text-5xl font-black uppercase tracking-tight sm:text-6xl">Productos</h1>
+          <p className="mt-3 max-w-md text-lg font-light leading-relaxed text-[var(--text-muted)]">
             Todo lo que usamos en el local, disponible para llevarte a casa.
           </p>
         </div>
         <div className="flex flex-wrap gap-[2px]">
           {categories.map((cat, i) => (
-            <button key={cat} className={`px-4 py-2 text-[10px] font-bold uppercase tracking-[0.15em] transition ${i === 0 ? "bg-[var(--tenant-primary)] text-white" : "bg-[var(--tenant-surface)] text-[var(--tenant-muted)] hover:bg-black/5"}`}>
+            <button key={cat} className={`px-5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] transition ${i === 0 ? "bg-[var(--tenant-primary)] text-white" : "bg-[var(--background-secondary)] text-[var(--text-muted)] hover:bg-[var(--background)]"}`}>
               {cat}
             </button>
           ))}
         </div>
       </div>
 
-      <div className="grid gap-[2px] sm:grid-cols-2 lg:grid-cols-3" style={{ background: "var(--tenant-border, #e5e5e5)" }}>
+      <div className="grid gap-[2px] sm:grid-cols-2 lg:grid-cols-3" style={{ background: "var(--border, #e0e0e0)" }}>
         {(products ?? []).map((product, index) => {
           const catArray = product.categoria_producto as { nombre: string }[] | null;
           const categoryName = catArray?.[0]?.nombre ?? "";
@@ -58,9 +58,11 @@ export default async function ProductosPage({ params }: ProductosPageProps) {
         })}
       </div>
 
-      <Link href={`/${slug}`} className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--tenant-muted)] transition hover:text-[var(--tenant-primary)]">
-        ← Volver al inicio
-      </Link>
+      <div className="pt-8 pb-12">
+        <Link href={`/${slug}`} className="inline-flex items-center gap-2 border border-[var(--border)] px-5 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)] transition hover:border-[var(--hover)] hover:text-[var(--hover)]">
+          ← Volver al inicio
+        </Link>
+      </div>
     </section>
   );
 }

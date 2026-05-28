@@ -73,7 +73,7 @@ export default async function ReservarPage({ params }: ReservarPageProps) {
   const availableDates = buildAvailableDates(today, 12);
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-6 pt-8">
       <BookingForm
         businessName={slug}
         services={services}
@@ -82,12 +82,14 @@ export default async function ReservarPage({ params }: ReservarPageProps) {
         availableSlots={availableSlots}
       />
 
-      <Link
-        href={`/${slug}`}
-        className="inline-flex rounded-full border border-black/15 px-5 py-2.5 text-sm font-medium transition hover:bg-black/5"
-      >
-        Volver al inicio
-      </Link>
+      <div className="pt-8 pb-12">
+        <Link
+          href={`/${slug}`}
+          className="inline-flex items-center gap-2 border border-[var(--border)] px-5 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)] transition hover:border-[var(--hover)] hover:text-[var(--hover)]"
+        >
+          Volver al inicio
+        </Link>
+      </div>
     </section>
   );
 }

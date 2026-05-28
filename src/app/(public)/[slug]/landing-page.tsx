@@ -136,11 +136,11 @@ function GreenCorner({ className = "" }: { className?: string }) {
     <div className={`absolute w-12 h-12 ${className}`}>
       <div
         className="absolute top-0 left-0 w-full h-[2px]"
-        style={{ background: "#324730" }}
+        style={{ background: "var(--hover)" }}
       />
       <div
         className="absolute top-0 left-0 h-full w-[2px]"
-        style={{ background: "#324730" }}
+        style={{ background: "var(--hover)" }}
       />
     </div>
   );
@@ -151,14 +151,14 @@ function SectionLabel({ children }: { children: string }) {
     <div className="flex items-center gap-3">
       <div
         className="h-[2px] w-6 rounded-full"
-        style={{ background: "#324730" }}
+        style={{ background: "var(--hover)" }}
       />
-      <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
+      <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
         {children}
       </p>
       <div
         className="h-[2px] w-6 rounded-full"
-        style={{ background: "#324730" }}
+        style={{ background: "var(--hover)" }}
       />
     </div>
   );
@@ -180,13 +180,13 @@ function TestimonialCarousel() {
       {/* Acento verde lateral */}
       <div
         className="absolute left-0 top-0 bottom-0 w-1"
-        style={{ background: "#324730" }}
+        style={{ background: "var(--hover)" }}
       />
       <RazorDecor />
       <div className="relative z-10 px-8 py-14 md:px-16 md:py-16 max-w-2xl">
         <div
           className="mb-7 h-16 w-16 overflow-hidden border-2 flex items-center justify-center"
-          style={{ borderRadius: "50%", borderColor: "#324730" }}
+          style={{ borderRadius: "50%", borderColor: "var(--hover)" }}
         >
           <span className="text-white text-xl font-black">
             {t.name.charAt(0)}
@@ -211,7 +211,7 @@ function TestimonialCarousel() {
                 style={{
                   width: i === current ? 24 : 6,
                   background:
-                    i === current ? "#324730" : "rgba(255,255,255,0.25)",
+                    i === current ? "var(--hover)" : "rgba(255,255,255,0.25)",
                 }}
                 aria-label={`Testimonio ${i + 1}`}
               />
@@ -221,7 +221,7 @@ function TestimonialCarousel() {
             <button
               onClick={prev}
               className="h-8 w-8 border border-white/20 text-white/50 hover:text-white transition-all flex items-center justify-center text-sm"
-              style={{ borderColor: "#32473040" }}
+              style={{ borderColor: "color-mix(in srgb, var(--hover) 25%, transparent)" }}
               aria-label="Anterior"
             >
               ←
@@ -229,7 +229,7 @@ function TestimonialCarousel() {
             <button
               onClick={next}
               className="h-8 w-8 text-white/50 hover:text-white transition-all flex items-center justify-center text-sm border"
-              style={{ borderColor: "#32473040" }}
+              style={{ borderColor: "color-mix(in srgb, var(--hover) 25%, transparent)" }}
               aria-label="Siguiente"
             >
               →
@@ -273,13 +273,13 @@ function ProductCarousel({ products }: { products: ProductItem[] }) {
   };
 
   return (
-    <div className="relative overflow-hidden" style={{ background: "#324730" }}>
+    <div className="relative overflow-hidden" style={{ background: "var(--hover)" }}>
       <div
         className="grid md:grid-cols-[1fr_1fr] gap-[1px]"
-        style={{ background: "#324730" }}
+        style={{ background: "var(--hover)" }}
       >
         {/* Imagen */}
-        <div className="relative overflow-hidden bg-neutral-100 min-h-[260px] md:min-h-[320px]">
+        <div className="relative overflow-hidden bg-[var(--background-secondary)] min-h-[260px] md:min-h-[320px]">
           {product.imagenUrl ? (
             <img
               src={product.imagenUrl}
@@ -287,8 +287,8 @@ function ProductCarousel({ products }: { products: ProductItem[] }) {
               className="h-full w-full object-cover absolute inset-0"
             />
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-neutral-100">
-              <span className="text-5xl font-black text-neutral-300">
+            <div className="absolute inset-0 flex items-center justify-center bg-[var(--background-secondary)]">
+              <span className="text-5xl font-black text-[var(--text-muted)]">
                 {product.nombre.charAt(0)}
               </span>
             </div>
@@ -296,22 +296,22 @@ function ProductCarousel({ products }: { products: ProductItem[] }) {
         </div>
 
         {/* Info */}
-        <div className="flex flex-col justify-center bg-white px-8 py-10 md:px-12 md:py-12">
-          <div className="mb-3 h-[2px] w-6" style={{ background: "#324730" }} />
+        <div className="flex flex-col justify-center bg-[var(--background-secondary)] px-8 py-10 md:px-12 md:py-12">
+          <div className="mb-3 h-[2px] w-6" style={{ background: "var(--hover)" }} />
           <p
             className="text-[9px] font-semibold uppercase tracking-[0.2em]"
-            style={{ color: "#324730" }}
+            style={{ color: "var(--hover)" }}
           >
             Producto {String(current + 1).padStart(2, "0")} de{" "}
             {String(total).padStart(2, "0")}
           </p>
-          <h3 className="mt-2 text-xl font-black uppercase tracking-tight leading-tight text-black md:text-2xl">
+          <h3 className="mt-2 text-xl font-black uppercase tracking-tight leading-tight text-[var(--foreground)] md:text-2xl">
             {product.nombre}
           </h3>
-          <p className="mt-3 text-sm text-neutral-500 leading-relaxed">
+          <p className="mt-3 text-sm text-[var(--text-muted)] leading-relaxed">
             {product.descripcion}
           </p>
-          <p className="mt-6 text-3xl font-black" style={{ color: "#324730" }}>
+          <p className="mt-6 text-3xl font-black" style={{ color: "var(--hover)" }}>
             S/{product.precioVenta}
           </p>
           <button
@@ -319,7 +319,7 @@ function ProductCarousel({ products }: { products: ProductItem[] }) {
             onClick={handleAdd}
             className="mt-5 inline-block px-6 py-3 text-[10px] font-bold uppercase tracking-[0.15em] text-white transition hover:opacity-75 w-fit"
             style={{
-              background: addedId === product.id ? "#059669" : "#324730",
+              background: addedId === product.id ? "#059669" : "var(--hover)",
             }}
           >
             {addedId === product.id ? "✓ Agregado" : "Agregar al carrito"}
@@ -328,7 +328,7 @@ function ProductCarousel({ products }: { products: ProductItem[] }) {
       </div>
 
       {/* Navegación */}
-      <div className="flex items-center justify-between bg-white px-8 py-4 md:px-12">
+      <div className="flex items-center justify-between bg-[var(--background-secondary)] px-8 py-4 md:px-12">
         <div className="flex items-center gap-2">
           {products.map((_, i) => (
             <button
@@ -337,7 +337,7 @@ function ProductCarousel({ products }: { products: ProductItem[] }) {
               className="h-1.5 transition-all duration-300"
               style={{
                 width: i === current ? 24 : 6,
-                background: i === current ? "#324730" : "rgba(0,0,0,0.15)",
+                background: i === current ? "var(--hover)" : "rgba(0,0,0,0.15)",
               }}
               aria-label={`Producto ${i + 1}`}
             />
@@ -347,7 +347,7 @@ function ProductCarousel({ products }: { products: ProductItem[] }) {
           <button
             onClick={prev}
             className="h-8 w-8 flex items-center justify-center text-sm border transition hover:opacity-70"
-            style={{ borderColor: "#32473040", color: "#324730" }}
+            style={{ borderColor: "color-mix(in srgb, var(--hover) 25%, transparent)", color: "var(--hover)" }}
             aria-label="Anterior"
           >
             ←
@@ -355,7 +355,7 @@ function ProductCarousel({ products }: { products: ProductItem[] }) {
           <button
             onClick={next}
             className="h-8 w-8 flex items-center justify-center text-sm border transition hover:opacity-70"
-            style={{ borderColor: "#32473040", color: "#324730" }}
+            style={{ borderColor: "color-mix(in srgb, var(--hover) 25%, transparent)", color: "var(--hover)" }}
             aria-label="Siguiente"
           >
             →
@@ -401,27 +401,27 @@ export default function LandingPage({
             <div className="absolute top-0 right-0 w-8 h-8">
               <div
                 className="absolute top-0 right-0 w-full h-[3px]"
-                style={{ background: "#324730" }}
+                style={{ background: "var(--hover)" }}
               />
               <div
                 className="absolute top-0 right-0 h-full w-[3px]"
-                style={{ background: "#324730" }}
+                style={{ background: "var(--hover)" }}
               />
             </div>
           </div>
           <div
-            className="border-b bg-white px-6 py-8"
-            style={{ borderColor: "#32473020" }}
+            className="border-b bg-[var(--background-secondary)] px-6 py-8"
+            style={{ borderColor: "color-mix(in srgb, var(--hover) 12.5%, transparent)" }}
           >
             {/* Línea verde en lugar de la negra */}
             <div
               className="mb-4 h-[3px] w-10 rounded-full"
-              style={{ background: "#324730" }}
+              style={{ background: "var(--hover)" }}
             />
-            <p className="mb-3 text-[9px] font-semibold tracking-[0.2em] uppercase text-neutral-400">
+            <p className="mb-3 text-[9px] font-semibold tracking-[0.2em] uppercase text-[var(--text-muted)]">
               San Miguel · Barbería
             </p>
-            <h1 className="text-4xl font-black uppercase leading-none tracking-tight text-black">
+            <h1 className="text-4xl font-black uppercase leading-none tracking-tight text-[var(--foreground)]">
               Redefi&shy;niendo
               <br />
               el corte
@@ -429,14 +429,14 @@ export default function LandingPage({
             <Link
               href={`/${slug}/reservar`}
               className="mt-6 inline-block px-6 py-3 text-[10px] font-bold tracking-[0.15em] uppercase text-white transition hover:opacity-75"
-              style={{ background: "#324730" }}
+              style={{ background: "var(--hover)" }}
             >
               Reservar turno
             </Link>
           </div>
-          <div className="w-full bg-white" style={{ height: 160 }}>
+          <div className="w-full bg-[var(--background-secondary)]" style={{ height: 160 }}>
             <img
-              src="https://res.cloudinary.com/dxuk9bogw/image/upload/v1777198980/Dise%C3%B1o_sin_t%C3%ADtulo_3_o2ipsz.png"
+              src="https://res.cloudinary.com/dp1vgjhsq/image/upload/v1779981307/LOGOTIPO_tsrnvl.png"
               alt="For Men Castilla"
               style={{ height: 160, width: "100%", objectFit: "contain" }}
             />
@@ -450,23 +450,23 @@ export default function LandingPage({
             style={{
               gridTemplateColumns: "1fr 1.6fr 1fr",
               gridTemplateRows: "380px 260px",
-              background: "#324730",
+              background: "var(--hover)",
             }}
           >
-            <div className="relative flex flex-col justify-end bg-white px-10 py-10">
+            <div className="relative flex flex-col justify-end bg-[var(--background-secondary)] px-10 py-10">
               <GreenCorner className="top-4 left-4" />
               {/* Línea verde */}
               <div
                 className="mb-4 h-[3px] w-10 rounded-full"
-                style={{ background: "#324730" }}
+                style={{ background: "var(--hover)" }}
               />
               <p
                 className="mb-3 text-[9px] font-semibold tracking-[0.2em] uppercase"
-                style={{ color: "#324730" }}
+                style={{ color: "var(--hover)" }}
               >
                 San Miguel · Barbería
               </p>
-              <h1 className="text-5xl font-black uppercase leading-none tracking-tight text-black xl:text-6xl">
+              <h1 className="text-5xl font-black uppercase leading-none tracking-tight text-[var(--foreground)] xl:text-6xl">
                 Redefi
                 <br />
                 niendo
@@ -491,11 +491,11 @@ export default function LandingPage({
               </span>
             </div>
             <div
-              className="overflow-hidden bg-white flex items-center justify-center"
+              className="overflow-hidden bg-[var(--background-secondary)] flex items-center justify-center"
               style={{ gridColumn: "1 / 2", gridRow: "2 / 3" }}
             >
               <img
-                src="https://res.cloudinary.com/dxuk9bogw/image/upload/v1777198980/Dise%C3%B1o_sin_t%C3%ADtulo_3_o2ipsz.png"
+                src="https://res.cloudinary.com/dp1vgjhsq/image/upload/v1779981307/LOGOTIPO_tsrnvl.png"
                 alt="For Men Castilla"
                 style={{ height: 160, width: 160, objectFit: "contain" }}
               />
@@ -503,7 +503,7 @@ export default function LandingPage({
             <div className="flex flex-col justify-center bg-neutral-900 px-10 py-8 text-white">
               <p
                 className="text-[9px] font-semibold tracking-[0.18em] uppercase"
-                style={{ color: "#324730" }}
+                style={{ color: "var(--hover)" }}
               >
                 Promedio
               </p>
@@ -514,28 +514,28 @@ export default function LandingPage({
                 Puntuación
               </p>
             </div>
-            <div className="relative flex flex-col justify-center bg-stone-100 px-10 py-8">
+            <div className="relative flex flex-col justify-center bg-[var(--background)] px-10 py-8">
               <GreenCorner className="bottom-4 right-4 rotate-180" />
               <p
                 className="text-[9px] font-semibold tracking-[0.18em] uppercase"
-                style={{ color: "#324730" }}
+                style={{ color: "var(--hover)" }}
               >
                 Horario
               </p>
               <p className="mt-2 text-2xl font-black uppercase tracking-tight">
                 Lun – Sáb
               </p>
-              <p className="mt-1 text-[9px] tracking-widest uppercase text-neutral-500">
+              <p className="mt-1 text-[9px] tracking-widest uppercase text-[var(--text-muted)]">
                 8:00 AM – 8:00 PM
               </p>
-              <p className="mt-4 text-sm leading-relaxed text-neutral-500">
+              <p className="mt-4 text-sm leading-relaxed text-[var(--text-muted)]">
                 Tres especialistas, un espacio cuidado y puntualidad
                 garantizada.
               </p>
               <Link
                 href={`/${slug}/reservar`}
                 className="mt-5 inline-block px-5 py-2.5 text-[10px] font-bold tracking-[0.14em] uppercase text-white transition hover:opacity-75 w-fit"
-                style={{ background: "#324730" }}
+                style={{ background: "var(--hover)" }}
               >
                 Reservar turno
               </Link>
@@ -555,20 +555,20 @@ export default function LandingPage({
 
         <div
           className="flex flex-col gap-[1px]"
-          style={{ background: "#324730" }}
+          style={{ background: "var(--hover)" }}
         >
           {services.map((service, index) => {
             const isDark = index % 2 !== 0;
             return (
               <article
                 key={service.id}
-                className={`relative grid gap-[1px] transition group ${isDark ? "bg-neutral-900" : "bg-white"}`}
+                className={`relative grid gap-[1px] transition group ${isDark ? "bg-neutral-900" : "bg-[var(--background-secondary)]"}`}
                 style={{ gridTemplateColumns: "1fr auto" }}
               >
                 {/* Barra lateral izquierda animada al hover */}
                 <div
                   className="absolute left-0 top-0 bottom-0 w-[3px] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"
-                  style={{ background: "#324730" }}
+                  style={{ background: "var(--hover)" }}
                 />
 
                 {/* Contenido principal */}
@@ -578,24 +578,24 @@ export default function LandingPage({
                       {/* Número */}
                       <span
                         className="text-[9px] font-black tabular-nums shrink-0"
-                        style={{ color: isDark ? "#324730" : "#32473080" }}
+                        style={{ color: isDark ? "var(--hover)" : "color-mix(in srgb, var(--hover) 50%, transparent)" }}
                       >
                         {String(index + 1).padStart(2, "0")}
                       </span>
                       <h3
-                        className={`text-sm font-black uppercase tracking-tight ${isDark ? "text-white" : "text-black"}`}
+                        className={`text-sm font-black uppercase tracking-tight ${isDark ? "text-white" : "text-[var(--foreground)]"}`}
                       >
                         {service.nombre}
                       </h3>
                     </div>
                     <span
-                      className={`shrink-0 text-[9px] font-semibold uppercase tracking-widest pt-0.5 ${isDark ? "text-white/30" : "text-neutral-400"}`}
+                      className={`shrink-0 text-[9px] font-semibold uppercase tracking-widest pt-0.5 ${isDark ? "text-white/30" : "text-[var(--text-muted)]"}`}
                     >
                       {service.duracion_minutos} min
                     </span>
                   </div>
                   <p
-                    className={`mt-2 text-xs leading-relaxed max-w-lg ${isDark ? "text-white/50" : "text-neutral-500"}`}
+                    className={`mt-2 text-xs leading-relaxed max-w-lg ${isDark ? "text-white/50" : "text-[var(--text-muted)]"}`}
                   >
                     {service.descripcion}
                   </p>
@@ -603,16 +603,16 @@ export default function LandingPage({
 
                 {/* Precio — bloque derecho separado por gap-px */}
                 <div
-                  className={`flex flex-col items-center justify-center px-7 py-7 min-w-[100px] ${isDark ? "bg-neutral-800" : "bg-stone-50"}`}
+                  className={`flex flex-col items-center justify-center px-7 py-7 min-w-[100px] ${isDark ? "bg-neutral-800" : "bg-[var(--background)]"}`}
                 >
                   <span
-                    className={`text-[9px] font-semibold uppercase tracking-widest mb-1 ${isDark ? "text-white/30" : "text-neutral-400"}`}
+                    className={`text-[9px] font-semibold uppercase tracking-widest mb-1 ${isDark ? "text-white/30" : "text-[var(--text-muted)]"}`}
                   >
                     Desde
                   </span>
                   <span
                     className="text-2xl font-black tracking-tight"
-                    style={{ color: isDark ? "white" : "#324730" }}
+                    style={{ color: isDark ? "white" : "var(--hover)" }}
                   >
                     S/{service.precio}
                   </span>
@@ -627,7 +627,7 @@ export default function LandingPage({
           <Link
             href={`/${slug}/reservar`}
             className="inline-block px-6 py-3 text-[10px] font-bold tracking-[0.15em] uppercase text-white transition hover:opacity-75"
-            style={{ background: "#324730" }}
+            style={{ background: "var(--hover)" }}
           >
             Reservar turno
           </Link>
@@ -644,18 +644,18 @@ export default function LandingPage({
         </div>
         <div
           className="grid gap-px md:grid-cols-[1fr_1.4fr]"
-          style={{ background: "#324730" }}
+          style={{ background: "var(--hover)" }}
         >
-          <div className="bg-white">
+          <div className="bg-[var(--background-secondary)]">
             {locations.map((loc, i) => (
               <div
                 key={loc.name}
-                className={`p-8 ${i === 0 ? "bg-neutral-900 text-white" : "bg-white"}`}
+                className={`p-8 ${i === 0 ? "bg-neutral-900 text-white" : "bg-[var(--background-secondary)]"}`}
               >
                 <div
                   className={`mb-5 inline-flex h-7 w-7 items-center justify-center text-xs font-black`}
                   style={{
-                    background: i === 0 ? "#324730" : "#1a1a1a",
+                    background: i === 0 ? "var(--hover)" : "var(--background-secondary)",
                     color: "white",
                   }}
                 >
@@ -665,32 +665,32 @@ export default function LandingPage({
                   {loc.name}
                 </h3>
                 <p
-                  className={`mt-2 text-[9px] font-semibold uppercase tracking-widest ${i === 0 ? "text-white/40" : "text-neutral-400"}`}
+                  className={`mt-2 text-[9px] font-semibold uppercase tracking-widest ${i === 0 ? "text-white/40" : "text-[var(--text-muted)]"}`}
                 >
                   {loc.address}
                 </p>
                 <div className="mt-6 space-y-2">
                   <div className="flex items-center gap-3">
                     <span
-                      className={`text-[9px] font-semibold uppercase tracking-widest ${i === 0 ? "text-white/30" : "text-neutral-400"}`}
+                      className={`text-[9px] font-semibold uppercase tracking-widest ${i === 0 ? "text-white/30" : "text-[var(--text-muted)]"}`}
                     >
                       Horario
                     </span>
                     <span
-                      className={`text-xs font-bold uppercase tracking-tight ${i === 0 ? "text-white" : "text-black"}`}
+                      className={`text-xs font-bold uppercase tracking-tight ${i === 0 ? "text-white" : "text-[var(--foreground)]"}`}
                     >
                       {loc.hours}
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <span
-                      className={`text-[9px] font-semibold uppercase tracking-widest ${i === 0 ? "text-white/30" : "text-neutral-400"}`}
+                      className={`text-[9px] font-semibold uppercase tracking-widest ${i === 0 ? "text-white/30" : "text-[var(--text-muted)]"}`}
                     >
                       Tel
                     </span>
                     <a
                       href={`tel:${loc.phone.replace(/\s/g, "")}`}
-                      className={`text-xs font-bold uppercase tracking-tight transition hover:opacity-70 ${i === 0 ? "text-white" : "text-black"}`}
+                      className={`text-xs font-bold uppercase tracking-tight transition hover:opacity-70 ${i === 0 ? "text-white" : "text-[var(--foreground)]"}`}
                     >
                       {loc.phone}
                     </a>
@@ -703,8 +703,8 @@ export default function LandingPage({
                     rel="noopener noreferrer"
                     className="inline-block border px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] transition hover:opacity-75"
                     style={{
-                      borderColor: i === 0 ? "#32473060" : "#324730",
-                      color: i === 0 ? "white" : "#324730",
+                      borderColor: i === 0 ? "color-mix(in srgb, var(--hover) 37.5%, transparent)" : "var(--hover)",
+                      color: i === 0 ? "white" : "var(--hover)",
                     }}
                   >
                     Ver en mapa
@@ -712,7 +712,7 @@ export default function LandingPage({
                   <Link
                     href={`/${slug}/reservar`}
                     className="inline-block px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] transition hover:opacity-75 text-white"
-                    style={{ background: "#324730" }}
+                    style={{ background: "var(--hover)" }}
                   >
                     Reservar
                   </Link>
@@ -720,7 +720,7 @@ export default function LandingPage({
               </div>
             ))}
           </div>
-          <div className="relative min-h-[320px] overflow-hidden bg-neutral-200 md:min-h-0">
+          <div className="relative min-h-[320px] overflow-hidden bg-[var(--background-secondary)] md:min-h-0">
             <iframe
               title="Ubicación del local"
               src={`https://www.openstreetmap.org/export/embed.html?bbox=${locations[0].lng - 0.004},${locations[0].lat - 0.003},${locations[0].lng + 0.004},${locations[0].lat + 0.003}&layer=mapnik&marker=${locations[0].lat},${locations[0].lng}`}
@@ -733,7 +733,7 @@ export default function LandingPage({
               {/* Línea verde sobre el overlay */}
               <div
                 className="mb-3 h-[2px] w-8"
-                style={{ background: "#324730" }}
+                style={{ background: "var(--hover)" }}
               />
               <p className="text-[9px] font-semibold uppercase tracking-widest text-white/50">
                 Local principal
@@ -757,25 +757,25 @@ export default function LandingPage({
           </div>
           <div
             className="grid gap-[1px] md:grid-cols-2 lg:grid-cols-3"
-            style={{ background: "#324730" }}
+            style={{ background: "var(--hover)" }}
           >
             {barbers.map((barber, i) => {
               const isDark = i % 2 !== 0;
               return (
                 <article
                   key={barber.id}
-                  className={`relative flex items-center gap-5 px-7 py-7 transition group ${isDark ? "bg-neutral-900 text-white" : "bg-white"}`}
+                  className={`relative flex items-center gap-5 px-7 py-7 transition group ${isDark ? "bg-neutral-900 text-white" : "bg-[var(--background-secondary)]"}`}
                 >
                   {/* Avatar con inicial */}
                   <div
                     className="flex h-16 w-16 shrink-0 items-center justify-center text-xl font-black text-white"
-                    style={{ background: "#324730" }}
+                    style={{ background: "var(--hover)" }}
                   >
                     {barber.nombre.charAt(0)}
                   </div>
                   <div className="min-w-0">
                     <h3
-                      className={`text-sm font-black uppercase tracking-tight truncate ${isDark ? "text-white" : "text-black"}`}
+                      className={`text-sm font-black uppercase tracking-tight truncate ${isDark ? "text-white" : "text-[var(--foreground)]"}`}
                     >
                       {barber.nombre}
                     </h3>
@@ -786,8 +786,8 @@ export default function LandingPage({
                             key={s}
                             className="inline-block px-2 py-0.5 text-[9px] font-semibold uppercase tracking-widest"
                             style={{
-                              background: isDark ? "#32473040" : "#32473015",
-                              color: isDark ? "#324730" : "#324730",
+                              background: isDark ? "color-mix(in srgb, var(--hover) 25%, transparent)" : "color-mix(in srgb, var(--hover) 8.2%, transparent)",
+                              color: isDark ? "var(--hover)" : "var(--hover)",
                             }}
                           >
                             {s}
@@ -816,7 +816,7 @@ export default function LandingPage({
             <Link
               href={`/${slug}/productos`}
               className="shrink-0 border px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] transition hover:opacity-75"
-              style={{ borderColor: "#324730", color: "#324730" }}
+              style={{ borderColor: "var(--hover)", color: "var(--hover)" }}
             >
               Ver todos
             </Link>
@@ -839,17 +839,17 @@ export default function LandingPage({
             <Link
               href={`/${slug}/galeria`}
               className="shrink-0 border px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] transition hover:opacity-75"
-              style={{ borderColor: "#324730", color: "#324730" }}
+              style={{ borderColor: "var(--hover)", color: "var(--hover)" }}
             >
               Ver galería
             </Link>
           </div>
 
-          <div className="flex flex-col gap-[1px]" style={{ background: "#324730" }}>
+          <div className="flex flex-col gap-[1px]" style={{ background: "var(--hover)" }}>
             {galleryItems.map((item, i) => {
               const isEven = i % 2 === 0;
               return (
-                <div key={item.id} className="bg-white">
+                <div key={item.id} className="bg-[var(--background-secondary)]">
                   {/* MOBILE: stack vertical imagen arriba, texto abajo */}
                   <div className="md:hidden">
                     <div
@@ -863,21 +863,21 @@ export default function LandingPage({
                       />
                       <div
                         className="absolute top-3 left-3 h-6 w-6 flex items-center justify-center text-[9px] font-black text-white"
-                        style={{ background: "#324730" }}
+                        style={{ background: "var(--hover)" }}
                       >
                         {String(i + 1).padStart(2, "0")}
                       </div>
                     </div>
                     <div className="px-6 py-5">
-                      <div className="mb-2 h-[2px] w-5" style={{ background: "#324730" }} />
-                      <p className="text-[9px] font-semibold uppercase tracking-[0.2em]" style={{ color: "#324730" }}>
+                      <div className="mb-2 h-[2px] w-5" style={{ background: "var(--hover)" }} />
+                      <p className="text-[9px] font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--hover)" }}>
                         Corte · 0{i + 1}
                       </p>
-                      <h3 className="mt-1.5 text-base font-black uppercase tracking-tight text-black">
+                      <h3 className="mt-1.5 text-base font-black uppercase tracking-tight text-[var(--foreground)]">
                         {item.titulo}
                       </h3>
                       {item.descripcion && (
-                        <p className="mt-2 text-xs text-neutral-400 leading-relaxed">
+                        <p className="mt-2 text-xs text-[var(--text-muted)] leading-relaxed">
                           {item.descripcion}
                         </p>
                       )}
@@ -887,7 +887,7 @@ export default function LandingPage({
                   {/* DESKTOP: alternado izquierda/derecha */}
                   <div
                     className="hidden md:grid gap-[1px]"
-                    style={{ gridTemplateColumns: "1fr 1fr", background: "#324730" }}
+                    style={{ gridTemplateColumns: "1fr 1fr", background: "var(--hover)" }}
                   >
                     <div
                       className={`relative overflow-hidden bg-neutral-900 group ${!isEven ? "order-2" : "order-1"}`}
@@ -900,25 +900,25 @@ export default function LandingPage({
                       />
                       <div
                         className="absolute top-4 left-4 h-7 w-7 flex items-center justify-center text-[10px] font-black text-white"
-                        style={{ background: "#324730" }}
+                        style={{ background: "var(--hover)" }}
                       >
                         {String(i + 1).padStart(2, "0")}
                       </div>
                     </div>
                     <div
-                      className={`flex flex-col justify-center bg-white px-10 py-10 ${!isEven ? "order-1" : "order-2"}`}
+                      className={`flex flex-col justify-center bg-[var(--background-secondary)] px-10 py-10 ${!isEven ? "order-1" : "order-2"}`}
                     >
-                      <div className="mb-3 h-[2px] w-6" style={{ background: "#324730" }} />
-                      <p className="text-[9px] font-semibold uppercase tracking-[0.2em]" style={{ color: "#324730" }}>
+                      <div className="mb-3 h-[2px] w-6" style={{ background: "var(--hover)" }} />
+                      <p className="text-[9px] font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--hover)" }}>
                         Corte · 0{i + 1}
                       </p>
-                      <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-black">
+                      <h3 className="mt-2 text-2xl font-black uppercase tracking-tight text-[var(--foreground)]">
                         {item.titulo}
                       </h3>
                       {item.descripcion && (
                         <>
-                          <div className="mt-4 h-px w-full bg-neutral-100" />
-                          <p className="mt-4 text-xs text-neutral-400 leading-relaxed">
+                          <div className="mt-4 h-px w-full bg-[var(--background-secondary)]" />
+                          <p className="mt-4 text-xs text-[var(--text-muted)] leading-relaxed">
                             {item.descripcion}
                           </p>
                         </>
@@ -942,15 +942,15 @@ export default function LandingPage({
         </div>
         <div
           className="relative overflow-hidden p-8 sm:p-12 md:p-16"
-          style={{ background: "#1a2b1e" }}
+          style={{ background: "color-mix(in srgb, var(--hover) 10%, var(--background-secondary))" }}
         >
           <GreenCorner className="top-6 right-6" />
           <div
             className="absolute top-0 left-0 right-0 h-[3px]"
-            style={{ background: "#324730" }}
+            style={{ background: "var(--hover)" }}
           />
           <div className="relative z-10 max-w-2xl">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em]" style={{ color: "#324730" }}>
+            <p className="text-[9px] font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--hover)" }}>
               Programa de fidelidad
             </p>
             <h3 className="mt-3 text-2xl font-black uppercase tracking-tight text-white md:text-3xl">
@@ -992,7 +992,7 @@ export default function LandingPage({
             <Link
               href={`/${slug}/promocion`}
               className="mt-8 inline-block px-7 py-3 text-[10px] font-bold tracking-[0.15em] uppercase text-white transition hover:opacity-75"
-              style={{ background: "#324730" }}
+              style={{ background: "var(--hover)" }}
             >
               Ver recompensas
             </Link>
