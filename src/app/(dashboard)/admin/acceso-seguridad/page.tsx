@@ -38,6 +38,7 @@ export default async function AccesoSeguridadPage() {
 
   return (
     <ModulePageShell
+      breadcrumb={[{ label: "Administracion", href: "/admin" }, { label: "Acceso y seguridad" }]}
       title="Acceso y seguridad"
       description="Revisa quien entra al sistema y cuida el acceso de tu equipo."
     >

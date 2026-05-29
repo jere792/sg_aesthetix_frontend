@@ -10,7 +10,6 @@ import {
   User,
   Boxes,
   Image,
-  KeyRound,
   Scissors,
   Star,
   Building2,
@@ -27,7 +26,6 @@ import { useTheme } from "@/contexts/theme-context";
 
 const navigation = [
   { href: "/admin", label: "Resumen", icon: LayoutDashboard },
-  { href: "/admin/acceso-seguridad", label: "Acceso y seguridad", icon: KeyRound },
   { href: "/admin/agenda", label: "Agenda", icon: Calendar },
   { href: "/admin/empleados", label: "Empleados", icon: Users },
   { href: "/admin/clientes", label: "Clientes", icon: User },

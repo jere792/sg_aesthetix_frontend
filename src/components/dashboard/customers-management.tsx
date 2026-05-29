@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { PencilLine, Search, Trash2, UserRound } from "lucide-react";
+import { ArrowLeft, PencilLine, Phone, Search, Trash2, UserRound, Users, X } from "lucide-react";
 import { ConfirmationModal } from "@/components/dashboard/confirmation-modal";
 import { CustomersService } from "@/services/customers.service";
 import type { Customer } from "@/types/customer";
@@ -25,11 +25,18 @@ const emptyDraft: CustomerRecord = {
 const inputClassName =
   "w-full rounded-2xl border border-[var(--border)] px-4 py-3 text-sm outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--foreground)]";
 
-export function CustomersManagement() {
+type Props = {
+  totalClientes: number;
+  nuevosEsteMes: number;
+  conTelefono: number;
+};
+
+export function CustomersManagement({ totalClientes, nuevosEsteMes, conTelefono }: Props) {
   const [customers, setCustomers] = useState<CustomerRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const [selectedId, setSelectedId] = useState("");
+  const [mode, setMode] = useState<"list" | "edit">("list");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [draft, setDraft] = useState<CustomerRecord>(emptyDraft);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -47,17 +54,6 @@ export function CustomersManagement() {
             dni: c.dni ?? "",
           })),
         );
-        if (data.length > 0) {
-          const first = data[0];
-          setSelectedId(first.id);
-          setDraft({
-            id: first.id,
-            name: `${first.nombres} ${first.apellidos ?? ""}`.trim(),
-            phone: first.telefono ?? "",
-            email: first.correoElectronico ?? "",
-            dni: first.dni ?? "",
-          });
-        }
       })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -69,16 +65,24 @@ export function CustomersManagement() {
       return (
         customer.name.toLowerCase().includes(text) ||
         customer.phone.toLowerCase().includes(text) ||
-        customer.email.toLowerCase().includes(text)
+        customer.email.toLowerCase().includes(text) ||
+        customer.dni.toLowerCase().includes(text)
       );
     });
   }, [customers, query]);
 
   const selectedCustomer = customers.find((customer) => customer.id === selectedId);
 
-  const handleSelect = (customer: CustomerRecord) => {
+  const handleEdit = (customer: CustomerRecord) => {
     setSelectedId(customer.id);
     setDraft(customer);
+    setMode("edit");
+  };
+
+  const handleBack = () => {
+    setMode("list");
+    setSelectedId(null);
+    setDraft(emptyDraft);
   };
 
   const handleSave = async () => {
@@ -97,11 +101,14 @@ export function CustomersManagement() {
       setCustomers((prev) =>
         prev.map((c) => (c.id === selectedId ? { ...draft } : c)),
       );
-      setIsConfirmOpen(false);
+      setMode("list");
+      setSelectedId(null);
+      setDraft(emptyDraft);
     } catch {
       /* error silencioso */
     } finally {
       setSaving(false);
+      setIsConfirmOpen(false);
     }
   };
 
@@ -111,17 +118,13 @@ export function CustomersManagement() {
       await CustomersService.delete(selectedId);
       const next = customers.filter((c) => c.id !== selectedId);
       setCustomers(next);
-      if (next.length > 0) {
-        setSelectedId(next[0].id);
-        setDraft(next[0]);
-      } else {
-        setSelectedId("");
-        setDraft(emptyDraft);
-      }
-      setIsDeleteConfirmOpen(false);
+      setMode("list");
+      setSelectedId(null);
+      setDraft(emptyDraft);
     } catch {
       /* error silencioso */
     }
+    setIsDeleteConfirmOpen(false);
   };
 
   if (loading) {
@@ -133,92 +136,146 @@ export function CustomersManagement() {
   }
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[1.18fr_0.92fr]">
-      <div className="space-y-4">
-        <div className="rounded-3xl border border-[var(--border)] bg-[var(--background)] p-5 shadow-sm">
-          <p className="text-sm font-semibold text-[var(--foreground)]">Clientes registrados</p>
-          <p className="mt-1 text-sm text-[var(--text-muted)]">
-            {customers.length} cliente(s) registrados en el sistema.
-          </p>
+    <>
+      {/* KPI — solo en listado */}
+      {mode === "list" && (
+        <div className="grid gap-3 sm:grid-cols-3">
+          <article className="rounded-2xl border border-[var(--hover)]/20 p-4" style={{ background: "color-mix(in srgb, var(--hover) 6%, var(--background-secondary))" }}>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">Total clientes</p>
+            <div className="mt-2 flex items-center gap-2">
+              <Users size={20} style={{ color: "var(--hover)" }} />
+              <p className="text-xl font-bold text-[var(--foreground)]">{totalClientes}</p>
+            </div>
+          </article>
+          <article className="rounded-2xl border border-[var(--hover)]/20 p-4" style={{ background: "color-mix(in srgb, var(--hover) 6%, var(--background-secondary))" }}>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">Nuevos este mes</p>
+            <div className="mt-2 flex items-center gap-2">
+              <UserRound size={20} style={{ color: "var(--hover)" }} />
+              <p className="text-xl font-bold text-[var(--foreground)]">{nuevosEsteMes}</p>
+            </div>
+          </article>
+          <article className="rounded-2xl border border-[var(--hover)]/20 p-4" style={{ background: "color-mix(in srgb, var(--hover) 6%, var(--background-secondary))" }}>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">Con telefono</p>
+            <div className="mt-2 flex items-center gap-2">
+              <Phone size={20} style={{ color: "var(--hover)" }} />
+              <p className="text-xl font-bold text-[var(--foreground)]">{conTelefono}</p>
+            </div>
+          </article>
+        </div>
+      )}
 
+      {/* Barra de busqueda */}
+      <div className="rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-5 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-[var(--foreground)]">Clientes registrados</p>
+            <p className="mt-1 text-sm text-[var(--text-muted)]">
+              {customers.length} cliente(s) en el sistema
+            </p>
+          </div>
+          {mode === "edit" && (
+            <button
+              type="button"
+              onClick={handleBack}
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition hover:bg-[var(--background)]"
+            >
+              <ArrowLeft size={16} />
+              Volver al listado
+            </button>
+          )}
+        </div>
+
+        {mode === "list" && (
           <label className="mt-4 flex items-center gap-3 rounded-2xl border border-[var(--border)] px-4 py-3">
             <Search size={16} className="text-[var(--text-muted)]" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               className="w-full bg-transparent text-sm outline-none placeholder:text-[var(--text-muted)]"
-              placeholder="Buscar por nombre, teléfono o email"
+              placeholder="Buscar por nombre, telefono, DNI o email"
             />
           </label>
-        </div>
-
-        <div className="overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] shadow-sm">
-          <table className="min-w-full text-sm">
-            <thead className="bg-[var(--background)] text-left text-[var(--text-muted)]">
-              <tr>
-                <th className="px-4 py-3">Cliente</th>
-                <th className="px-4 py-3">Teléfono</th>
-                <th className="px-4 py-3">DNI</th>
-                <th className="px-4 py-3">Email</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredCustomers.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="px-4 py-8 text-center text-sm text-[var(--text-muted)]">
-                    No se encontraron clientes.
-                  </td>
-                </tr>
-              ) : (
-                filteredCustomers.map((customer) => (
-                  <tr
-                    key={customer.id}
-                    onClick={() => handleSelect(customer)}
-                    className={`cursor-pointer border-t border-transparent/5 transition hover:bg-[var(--background)] ${
-                      selectedId === customer.id ? "bg-[var(--background)]" : ""
-                    }`}
-                  >
-                    <td className="px-4 py-3">
-                      <p className="font-semibold text-[var(--foreground)]">{customer.name}</p>
-                    </td>
-                    <td className="px-4 py-3 text-[var(--foreground)]">{customer.phone || "—"}</td>
-                    <td className="px-4 py-3 text-[var(--foreground)]">{customer.dni || "—"}</td>
-                    <td className="px-4 py-3 text-[var(--foreground)]">{customer.email || "—"}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        )}
       </div>
 
-      <aside className="space-y-4">
-        <div className="rounded-3xl border border-[var(--border)] bg-[var(--background)] p-5 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="rounded-2xl bg-[var(--hover)]/15 p-3">
-              <UserRound size={18} className="text-[var(--foreground)]" />
+      {/* Listado */}
+      {mode === "list" && (
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {filteredCustomers.length === 0 ? (
+            <div className="col-span-full flex flex-col items-center gap-3 py-16">
+              <UserRound size={32} className="text-[var(--text-muted)]" />
+              <p className="text-sm text-[var(--text-muted)]">
+                {query ? "No se encontraron clientes con esos filtros." : "No hay clientes registrados."}
+              </p>
+            </div>
+          ) : (
+            filteredCustomers.map((customer) => (
+              <article
+                key={customer.id}
+                className="rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--background)] text-[var(--foreground)]">
+                    <UserRound size={20} />
+                  </div>
+                </div>
+
+                <div className="mt-3">
+                  <p className="text-base font-semibold text-[var(--foreground)]">{customer.name}</p>
+                </div>
+
+                <div className="mt-2 space-y-1 text-sm text-[var(--text-muted)]">
+                  {customer.phone && <p>{customer.phone}</p>}
+                  {customer.email && <p className="truncate">{customer.email}</p>}
+                  {customer.dni && <p className="text-xs">DNI: {customer.dni}</p>}
+                </div>
+
+                <div className="mt-4 flex items-center gap-2 border-t border-[var(--border)] pt-4">
+                  <button
+                    type="button"
+                    onClick={() => handleEdit(customer)}
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[var(--border)] py-2 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--background)]"
+                  >
+                    <PencilLine size={14} />
+                    Editar
+                  </button>
+                </div>
+              </article>
+            ))
+          )}
+        </div>
+      )}
+
+      {/* Formulario editar */}
+      {mode === "edit" && (
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-6 shadow-sm">
+          <div className="mb-6 flex items-center gap-3">
+            <div className="rounded-2xl bg-[var(--background)] p-3">
+              <UserRound size={20} className="text-[var(--foreground)]" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-[var(--foreground)]">Editar cliente</p>
-              <p className="text-sm text-[var(--text-muted)]">Corrige datos cuando haga falta.</p>
+              <p className="text-lg font-semibold text-[var(--foreground)]">Editar cliente</p>
+              <p className="text-sm text-[var(--text-muted)]">
+                {selectedCustomer ? `Editando a ${selectedCustomer.name}` : ""}
+              </p>
             </div>
           </div>
 
-          <div className="mt-4 grid gap-3">
-            <Field label="Nombre completo">
+          <div className="grid gap-4 md:grid-cols-2">
+            <Field label="Nombre completo" required>
               <input
                 className={inputClassName}
                 value={draft.name}
                 onChange={(event) => setDraft((current) => ({ ...current, name: event.target.value }))}
-                disabled={!selectedCustomer}
+                placeholder="Nombres y apellidos"
               />
             </Field>
-            <Field label="Teléfono">
+            <Field label="Telefono">
               <input
                 className={inputClassName}
                 value={draft.phone}
                 onChange={(event) => setDraft((current) => ({ ...current, phone: event.target.value }))}
-                disabled={!selectedCustomer}
+                placeholder="999 999 999"
               />
             </Field>
             <Field label="Email">
@@ -226,7 +283,7 @@ export function CustomersManagement() {
                 className={inputClassName}
                 value={draft.email}
                 onChange={(event) => setDraft((current) => ({ ...current, email: event.target.value }))}
-                disabled={!selectedCustomer}
+                placeholder="correo@ejemplo.com"
               />
             </Field>
             <Field label="DNI">
@@ -234,17 +291,17 @@ export function CustomersManagement() {
                 className={inputClassName}
                 value={draft.dni}
                 onChange={(event) => setDraft((current) => ({ ...current, dni: event.target.value }))}
-                disabled={!selectedCustomer}
+                placeholder="12345678"
               />
             </Field>
           </div>
 
-          <div className="mt-5 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-[var(--border)] pt-6">
             <button
               type="button"
               onClick={() => setIsConfirmOpen(true)}
-              disabled={!selectedCustomer || saving}
-              className="inline-flex items-center gap-2 rounded-full bg-[var(--button-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--button-primary-foreground)] transition enabled:hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={!draft.name || saving}
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--button-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--button-primary-foreground)] transition hover:opacity-90 disabled:opacity-50"
             >
               <PencilLine size={16} />
               Guardar cambios
@@ -252,41 +309,51 @@ export function CustomersManagement() {
             <button
               type="button"
               onClick={() => setIsDeleteConfirmOpen(true)}
-              disabled={!selectedCustomer}
-              className="inline-flex items-center gap-2 rounded-full border border-[var(--destructive-border)] px-5 py-2.5 text-sm font-semibold text-[var(--destructive)] transition enabled:hover:bg-[var(--destructive-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--destructive-border)] px-5 py-2.5 text-sm font-semibold text-[var(--destructive)] transition hover:bg-[var(--destructive-hover)]"
             >
               <Trash2 size={16} />
-              Borrar cliente
+              Eliminar cliente
+            </button>
+            <button
+              type="button"
+              onClick={handleBack}
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-5 py-2.5 text-sm font-semibold text-[var(--foreground)] transition hover:bg-[var(--background)]"
+            >
+              <X size={16} />
+              Cancelar
             </button>
           </div>
         </div>
-      </aside>
+      )}
 
       <ConfirmationModal
         open={isConfirmOpen}
         title="Confirmar cambios"
-        description="Se guardarán los cambios hechos en los datos del cliente."
-        confirmLabel={saving ? "Guardando..." : "Sí, guardar"}
+        description="Se guardaran los cambios hechos en los datos del cliente."
+        confirmLabel={saving ? "Guardando..." : "Si, guardar"}
         onClose={() => setIsConfirmOpen(false)}
         onConfirm={handleSave}
       />
 
       <ConfirmationModal
         open={isDeleteConfirmOpen}
-        title="Confirmar eliminación"
-        description="Este cliente se eliminará del sistema."
-        confirmLabel="Sí, eliminar"
+        title="Confirmar eliminacion"
+        description="Este cliente se eliminara del sistema."
+        confirmLabel="Si, eliminar"
         onClose={() => setIsDeleteConfirmOpen(false)}
         onConfirm={handleDelete}
       />
-    </div>
+    </>
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
     <label className="space-y-2">
-      <span className="text-sm font-medium text-[var(--foreground)]">{label}</span>
+      <span className="text-sm font-medium text-[var(--foreground)]">
+        {label}
+        {required && <span className="ml-1 text-[var(--destructive)]">*</span>}
+      </span>
       {children}
     </label>
   );
