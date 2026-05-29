@@ -79,10 +79,10 @@ export default async function AdminHomePage() {
 
   return (
     <section className="space-y-6">
-      <header className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
-        <p className="text-sm text-zinc-500">Bienvenido de nuevo</p>
-        <h1 className="mt-1 text-3xl font-bold text-zinc-900">Resumen del negocio</h1>
-        <p className="mt-2 text-sm text-zinc-600">
+      <header className="rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-6 shadow-sm">
+        <p className="text-sm text-[var(--text-muted)]">Bienvenido de nuevo</p>
+        <h1 className="mt-1 text-3xl font-bold text-[var(--foreground)]">Resumen del negocio</h1>
+        <p className="mt-2 text-sm text-[var(--text-muted)]">
           Esto es lo que importa hoy.
         </p>
       </header>
@@ -94,15 +94,23 @@ export default async function AdminHomePage() {
           return (
             <article
               key={kpi.label}
-              className="flex items-center gap-4 rounded-2xl border border-zinc-200 bg-gradient-to-br from-white to-zinc-50 p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="flex items-center gap-4 rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              style={{
+                background: "var(--background-secondary)",
+              }}
             >
-              <div className="rounded-xl bg-gradient-to-br from-sky-100 to-fuchsia-100 p-3">
-                <Icon size={20} className="text-zinc-700" />
+              <div
+                className="rounded-xl p-3"
+                style={{
+                  background: "color-mix(in srgb, var(--hover) 12%, var(--background-secondary))",
+                }}
+              >
+                <Icon size={20} style={{ color: "var(--hover)" }} />
               </div>
 
               <div>
-                <p className="text-sm text-zinc-500">{kpi.label}</p>
-                <p className="text-2xl font-bold text-zinc-900">{kpi.value}</p>
+                <p className="text-sm text-[var(--text-muted)]">{kpi.label}</p>
+                <p className="text-2xl font-bold text-[var(--foreground)]">{kpi.value}</p>
               </div>
             </article>
           );
@@ -110,17 +118,17 @@ export default async function AdminHomePage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
                 Pr&oacute;ximas citas
               </p>
-              <h2 className="mt-1 text-xl font-bold tracking-tight text-zinc-900">Hoy</h2>
+              <h2 className="mt-1 text-xl font-bold tracking-tight text-[var(--foreground)]">Hoy</h2>
             </div>
             <Link
               href="/admin/agenda"
-              className="inline-flex items-center gap-1 text-sm font-semibold text-zinc-900 transition hover:gap-2"
+              className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--foreground)] transition hover:gap-2"
             >
               Ver todas
               <ArrowRight size={16} />
@@ -128,51 +136,51 @@ export default async function AdminHomePage() {
           </div>
 
           {proximasCitas && proximasCitas.length > 0 ? (
-            <ul className="mt-5 divide-y divide-zinc-100">
+            <ul className="mt-5 divide-y divide-transparent/5">
               {proximasCitas.map((cita, i) => (
                 <li key={i} className="flex items-center justify-between py-3">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-100 text-xs font-bold text-zinc-600">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--background)] text-xs font-bold text-[var(--text-muted)]">
                       {cita.hora_inicio?.slice(0, 2)}
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-zinc-900">
+                      <p className="text-sm font-semibold text-[var(--foreground)]">
                         {cita.hora_inicio?.slice(0, 5)}
                       </p>
                     </div>
                   </div>
-                  <span className="rounded-full bg-zinc-100 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-zinc-600">
+                  <span className="rounded-full bg-[var(--background)] px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-[var(--text-muted)]">
                     Pendiente
                   </span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="mt-5 text-sm text-zinc-400">
+            <p className="mt-5 text-sm text-[var(--text-muted)]">
               No hay citas pendientes para hoy.
             </p>
           )}
         </div>
 
-        <div className="rounded-3xl border border-zinc-200 bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-6 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
                 Clientes
               </p>
-              <h2 className="mt-1 text-xl font-bold tracking-tight text-zinc-900">
+              <h2 className="mt-1 text-xl font-bold tracking-tight text-[var(--foreground)]">
                 {clientesRegistrados ?? 0} registrados
               </h2>
             </div>
             <Link
               href="/admin/clientes"
-              className="inline-flex items-center gap-1 text-sm font-semibold text-zinc-900 transition hover:gap-2"
+              className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--foreground)] transition hover:gap-2"
             >
               Ver todos
               <ArrowRight size={16} />
             </Link>
           </div>
-          <p className="mt-3 text-sm text-zinc-500">
+          <p className="mt-3 text-sm text-[var(--text-muted)]">
             {productosPorTerminarse > 0
               ? `${productosPorTerminarse} producto${
                   productosPorTerminarse === 1 ? "" : "s"
@@ -190,7 +198,7 @@ export default async function AdminHomePage() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-xl border border-zinc-200 px-4 py-3 text-center text-sm font-semibold text-zinc-700 transition hover:border-zinc-900 hover:text-zinc-900"
+                className="rounded-xl border border-[var(--border)] px-4 py-3 text-center text-sm font-semibold text-[var(--text-muted)] transition hover:border-[var(--hover)] hover:text-[var(--foreground)]"
               >
                 {link.label}
               </Link>

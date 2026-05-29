@@ -23,7 +23,7 @@ const emptyDraft: CustomerRecord = {
 };
 
 const inputClassName =
-  "w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm outline-none transition placeholder:text-zinc-400 focus:border-zinc-900";
+  "w-full rounded-2xl border border-[var(--border)] px-4 py-3 text-sm outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--foreground)]";
 
 export function CustomersManagement() {
   const [customers, setCustomers] = useState<CustomerRecord[]>([]);
@@ -127,7 +127,7 @@ export function CustomersManagement() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="h-4 w-4 animate-pulse rounded-full bg-zinc-300" />
+        <div className="h-4 w-4 animate-pulse rounded-full bg-[var(--text-muted)]" />
       </div>
     );
   }
@@ -135,26 +135,26 @@ export function CustomersManagement() {
   return (
     <div className="grid gap-6 xl:grid-cols-[1.18fr_0.92fr]">
       <div className="space-y-4">
-        <div className="rounded-3xl border border-zinc-200 bg-gradient-to-br from-white to-sky-50 p-5 shadow-sm">
-          <p className="text-sm font-semibold text-zinc-900">Clientes registrados</p>
-          <p className="mt-1 text-sm text-zinc-600">
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--background)] p-5 shadow-sm">
+          <p className="text-sm font-semibold text-[var(--foreground)]">Clientes registrados</p>
+          <p className="mt-1 text-sm text-[var(--text-muted)]">
             {customers.length} cliente(s) registrados en el sistema.
           </p>
 
-          <label className="mt-4 flex items-center gap-3 rounded-2xl border border-zinc-200 px-4 py-3">
-            <Search size={16} className="text-zinc-400" />
+          <label className="mt-4 flex items-center gap-3 rounded-2xl border border-[var(--border)] px-4 py-3">
+            <Search size={16} className="text-[var(--text-muted)]" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              className="w-full bg-transparent text-sm outline-none placeholder:text-zinc-400"
+              className="w-full bg-transparent text-sm outline-none placeholder:text-[var(--text-muted)]"
               placeholder="Buscar por nombre, teléfono o email"
             />
           </label>
         </div>
 
-        <div className="overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] shadow-sm">
           <table className="min-w-full text-sm">
-            <thead className="bg-zinc-50 text-left text-zinc-600">
+            <thead className="bg-[var(--background)] text-left text-[var(--text-muted)]">
               <tr>
                 <th className="px-4 py-3">Cliente</th>
                 <th className="px-4 py-3">Teléfono</th>
@@ -165,7 +165,7 @@ export function CustomersManagement() {
             <tbody>
               {filteredCustomers.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-4 py-8 text-center text-sm text-zinc-400">
+                  <td colSpan={4} className="px-4 py-8 text-center text-sm text-[var(--text-muted)]">
                     No se encontraron clientes.
                   </td>
                 </tr>
@@ -174,16 +174,16 @@ export function CustomersManagement() {
                   <tr
                     key={customer.id}
                     onClick={() => handleSelect(customer)}
-                    className={`cursor-pointer border-t border-zinc-100 transition hover:bg-zinc-50 ${
-                      selectedId === customer.id ? "bg-sky-50" : ""
+                    className={`cursor-pointer border-t border-transparent/5 transition hover:bg-[var(--background)] ${
+                      selectedId === customer.id ? "bg-[var(--background)]" : ""
                     }`}
                   >
                     <td className="px-4 py-3">
-                      <p className="font-semibold text-zinc-900">{customer.name}</p>
+                      <p className="font-semibold text-[var(--foreground)]">{customer.name}</p>
                     </td>
-                    <td className="px-4 py-3 text-zinc-700">{customer.phone || "—"}</td>
-                    <td className="px-4 py-3 text-zinc-700">{customer.dni || "—"}</td>
-                    <td className="px-4 py-3 text-zinc-700">{customer.email || "—"}</td>
+                    <td className="px-4 py-3 text-[var(--foreground)]">{customer.phone || "—"}</td>
+                    <td className="px-4 py-3 text-[var(--foreground)]">{customer.dni || "—"}</td>
+                    <td className="px-4 py-3 text-[var(--foreground)]">{customer.email || "—"}</td>
                   </tr>
                 ))
               )}
@@ -193,14 +193,14 @@ export function CustomersManagement() {
       </div>
 
       <aside className="space-y-4">
-        <div className="rounded-3xl border border-zinc-200 bg-gradient-to-br from-white to-fuchsia-50 p-5 shadow-sm">
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--background)] p-5 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="rounded-2xl bg-fuchsia-100 p-3">
-              <UserRound size={18} className="text-zinc-700" />
+            <div className="rounded-2xl bg-[var(--hover)]/15 p-3">
+              <UserRound size={18} className="text-[var(--foreground)]" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-zinc-900">Editar cliente</p>
-              <p className="text-sm text-zinc-600">Corrige datos cuando haga falta.</p>
+              <p className="text-sm font-semibold text-[var(--foreground)]">Editar cliente</p>
+              <p className="text-sm text-[var(--text-muted)]">Corrige datos cuando haga falta.</p>
             </div>
           </div>
 
@@ -244,7 +244,7 @@ export function CustomersManagement() {
               type="button"
               onClick={() => setIsConfirmOpen(true)}
               disabled={!selectedCustomer || saving}
-              className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white transition enabled:hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--button-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--button-primary-foreground)] transition enabled:hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <PencilLine size={16} />
               Guardar cambios
@@ -253,7 +253,7 @@ export function CustomersManagement() {
               type="button"
               onClick={() => setIsDeleteConfirmOpen(true)}
               disabled={!selectedCustomer}
-              className="inline-flex items-center gap-2 rounded-full border border-red-200 px-5 py-2.5 text-sm font-semibold text-red-700 transition enabled:hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--destructive-border)] px-5 py-2.5 text-sm font-semibold text-[var(--destructive)] transition enabled:hover:bg-[var(--destructive-hover)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Trash2 size={16} />
               Borrar cliente
@@ -286,7 +286,7 @@ export function CustomersManagement() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="space-y-2">
-      <span className="text-sm font-medium text-zinc-700">{label}</span>
+      <span className="text-sm font-medium text-[var(--foreground)]">{label}</span>
       {children}
     </label>
   );

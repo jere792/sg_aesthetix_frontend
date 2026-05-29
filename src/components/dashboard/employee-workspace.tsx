@@ -97,7 +97,7 @@ const checklistItems = [
 ];
 
 const noteInputClassName =
-  "min-h-32 w-full rounded-3xl border border-zinc-200 px-4 py-4 text-sm outline-none transition focus:border-zinc-900";
+  "min-h-32 w-full rounded-3xl border border-[var(--border)] px-4 py-4 text-sm outline-none transition focus:border-[var(--foreground)]";
 
 type EmployeeWorkspaceProps = {
   initialView?: "jornada" | "servicios" | "agenda";
@@ -179,16 +179,16 @@ export function EmployeeWorkspace({
 
   return (
     <div className="space-y-6">
-      <section className="rounded-[2rem] border border-zinc-200 bg-white p-6 shadow-sm">
+      <section className="rounded-[2rem] border border-[var(--border)] bg-[var(--background-secondary)] p-6 shadow-sm">
         <div className="grid gap-5 xl:grid-cols-[1.35fr_0.75fr]">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
               Mi jornada
             </p>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight text-zinc-900">
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-[var(--foreground)]">
               Tus servicios y tus citas
             </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-zinc-600">
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--text-muted)]">
               Aqui ves solo lo que te corresponde hoy, con una vista clara y rapida.
             </p>
           </div>
@@ -196,12 +196,17 @@ export function EmployeeWorkspace({
           <div
             className={`rounded-[1.75rem] border px-5 py-4 transition ${
               isAvailable
-                ? "border-emerald-200 bg-gradient-to-br from-emerald-50 to-lime-50"
-                : "border-rose-200 bg-gradient-to-br from-rose-50 to-orange-50"
+                ? "border-[var(--hover)]/20"
+                : "border-[var(--warning)]/20"
             }`}
+            style={{
+              background: isAvailable
+                ? "color-mix(in srgb, var(--hover) 8%, var(--background-secondary))"
+                : "color-mix(in srgb, var(--warning) 8%, var(--background-secondary))",
+            }}
           >
-            <p className="text-sm font-semibold text-zinc-900">Estado de hoy</p>
-            <p className="mt-1 text-sm text-zinc-600">
+            <p className="text-sm font-semibold text-[var(--foreground)]">Estado de hoy</p>
+            <p className="mt-1 text-sm text-[var(--text-muted)]">
               {isAvailable
                 ? "Puedes seguir recibiendo nuevas citas."
                 : "No entraran nuevas citas por ahora."}
@@ -209,10 +214,10 @@ export function EmployeeWorkspace({
             <button
               type="button"
               onClick={() => setIsAvailable((current) => !current)}
-              className={`mt-4 rounded-full px-4 py-2 text-sm font-semibold transition ${
+              className={`mt-4 rounded-full px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90 ${
                 isAvailable
-                  ? "bg-emerald-600 text-white hover:bg-emerald-700"
-                  : "bg-rose-600 text-white hover:bg-rose-700"
+                  ? "bg-[var(--hover)]"
+                  : "bg-[var(--warning)]"
               }`}
             >
               {isAvailable ? "Disponible" : "No disponible"}
@@ -258,15 +263,15 @@ export function EmployeeWorkspace({
 
       {initialView === "jornada" ? (
         <div className="grid gap-6 xl:grid-cols-[1.15fr_0.95fr]">
-          <section className="rounded-[2rem] border border-zinc-200 bg-white p-6 shadow-sm">
+          <section className="rounded-[2rem] border border-[var(--border)] bg-[var(--background-secondary)] p-6 shadow-sm">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-lg font-semibold text-zinc-900">Resumen del dia</p>
-                <p className="mt-1 text-sm text-zinc-600">
+                <p className="text-lg font-semibold text-[var(--foreground)]">Resumen del dia</p>
+                <p className="mt-1 text-sm text-[var(--text-muted)]">
                   Entra rapido a lo que necesitas ver ahora.
                 </p>
               </div>
-              <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-700">
+              <span className="rounded-full bg-[var(--background)] px-3 py-1 text-xs font-semibold text-[var(--text-muted)]">
                 Vista activa
               </span>
             </div>
@@ -275,17 +280,20 @@ export function EmployeeWorkspace({
               <button
                 type="button"
                 onClick={() => openView("servicios")}
-                className="rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-5 text-left transition hover:-translate-y-0.5 hover:shadow-sm"
+                className="rounded-3xl border border-[var(--hover)]/20 p-5 text-left transition hover:-translate-y-0.5 hover:shadow-sm"
+                style={{
+                  background: "color-mix(in srgb, var(--hover) 8%, var(--background-secondary))",
+                }}
               >
-                <p className="text-lg font-semibold text-zinc-900">Mis servicios</p>
-                <p className="mt-2 text-sm text-zinc-600">
+                <p className="text-lg font-semibold text-[var(--foreground)]">Mis servicios</p>
+                <p className="mt-2 text-sm text-[var(--text-muted)]">
                   Revisa solo lo que puedes atender hoy.
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
+                  <span className="rounded-full bg-[var(--background-secondary)] px-3 py-1 text-xs font-semibold text-[var(--text-muted)]">
                     {linkedServices.length} servicios
                   </span>
-                  <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
+                  <span className="rounded-full bg-[var(--background-secondary)] px-3 py-1 text-xs font-semibold text-[var(--text-muted)]">
                     {selectedService?.name}
                   </span>
                 </div>
@@ -294,17 +302,20 @@ export function EmployeeWorkspace({
               <button
                 type="button"
                 onClick={() => openView("agenda")}
-                className="rounded-3xl border border-sky-200 bg-gradient-to-br from-sky-50 to-cyan-50 p-5 text-left transition hover:-translate-y-0.5 hover:shadow-sm"
+                className="rounded-3xl border border-[var(--hover)]/20 p-5 text-left transition hover:-translate-y-0.5 hover:shadow-sm"
+                style={{
+                  background: "color-mix(in srgb, var(--hover) 6%, var(--background-secondary))",
+                }}
               >
-                <p className="text-lg font-semibold text-zinc-900">Mis citas</p>
-                <p className="mt-2 text-sm text-zinc-600">
+                <p className="text-lg font-semibold text-[var(--foreground)]">Mis citas</p>
+                <p className="mt-2 text-sm text-[var(--text-muted)]">
                   Mira tus turnos y actualiza su estado.
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
+                  <span className="rounded-full bg-[var(--background-secondary)] px-3 py-1 text-xs font-semibold text-[var(--text-muted)]">
                     {appointments.length} citas
                   </span>
-                  <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
+                  <span className="rounded-full bg-[var(--background-secondary)] px-3 py-1 text-xs font-semibold text-[var(--text-muted)]">
                     {pendingCount} pendientes
                   </span>
                 </div>
@@ -312,57 +323,60 @@ export function EmployeeWorkspace({
             </div>
 
             <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <section className="rounded-3xl border border-zinc-200 bg-zinc-50 p-5">
-                <p className="text-sm font-semibold text-zinc-900">Antes de empezar</p>
+              <section className="rounded-3xl border border-[var(--border)] bg-[var(--background)] p-5">
+                <p className="text-sm font-semibold text-[var(--foreground)]">Antes de empezar</p>
                 <div className="mt-4 space-y-3">
                   {checklistItems.map((item, index) => (
                     <div
                       key={item}
-                      className="flex items-center gap-3 rounded-2xl border border-zinc-200 bg-white px-4 py-3"
+                      className="flex items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] px-4 py-3"
                     >
                       {index < 2 ? (
-                        <CheckCircle2 size={18} className="text-emerald-600" />
+                        <CheckCircle2 size={18} style={{ color: "var(--hover)" }} />
                       ) : (
-                        <ClipboardList size={18} className="text-zinc-500" />
+                        <ClipboardList size={18} className="text-[var(--text-muted)]" />
                       )}
-                      <span className="text-sm text-zinc-700">{item}</span>
+                      <span className="text-sm text-[var(--foreground)]">{item}</span>
                     </div>
                   ))}
                 </div>
               </section>
 
-              <section className="rounded-3xl border border-zinc-200 bg-zinc-50 p-5">
-                <p className="text-sm font-semibold text-zinc-900">Nota del dia</p>
+              <section className="rounded-3xl border border-[var(--border)] bg-[var(--background)] p-5">
+                <p className="text-sm font-semibold text-[var(--foreground)]">Nota del dia</p>
                 <textarea
                   value={dailyNote}
                   onChange={(event) => setDailyNote(event.target.value)}
-                  className={`mt-4 bg-white ${noteInputClassName}`}
+                  className={`mt-4 bg-[var(--background-secondary)] ${noteInputClassName}`}
                 />
               </section>
             </div>
           </section>
 
           <div className="grid gap-6">
-            <section className="rounded-[2rem] border border-zinc-200 bg-white p-6 shadow-sm">
-              <p className="text-sm font-semibold text-zinc-900">Siguiente cita</p>
+            <section className="rounded-[2rem] border border-[var(--border)] bg-[var(--background-secondary)] p-6 shadow-sm">
+              <p className="text-sm font-semibold text-[var(--foreground)]">Siguiente cita</p>
               {nextAppointment ? (
-                <div className="mt-4 rounded-3xl bg-zinc-900 p-5 text-white">
-                  <p className="text-sm text-zinc-300">{nextAppointment.time}</p>
+                <div
+                  className="mt-4 rounded-3xl p-5"
+                  style={{ background: "var(--foreground)", color: "var(--background)" }}
+                >
+                  <p className="text-sm opacity-60">{nextAppointment.time}</p>
                   <p className="mt-1 text-xl font-bold">{nextAppointment.client}</p>
-                  <p className="mt-2 text-sm text-zinc-300">{nextAppointment.service}</p>
-                  <div className="mt-4 flex items-center gap-2 text-sm text-zinc-200">
+                  <p className="mt-2 text-sm opacity-60">{nextAppointment.service}</p>
+                  <div className="mt-4 flex items-center gap-2 text-sm opacity-80">
                     <BadgeCheck size={16} />
                     {nextAppointment.note}
                   </div>
                 </div>
               ) : (
-                <p className="mt-4 text-sm text-zinc-600">No hay citas por atender.</p>
+                <p className="mt-4 text-sm text-[var(--text-muted)]">No hay citas por atender.</p>
               )}
             </section>
 
-            <section className="rounded-[2rem] border border-zinc-200 bg-white p-6 shadow-sm">
-              <p className="text-sm font-semibold text-zinc-900">Tu perfil</p>
-              <div className="mt-4 space-y-3 text-sm text-zinc-600">
+            <section className="rounded-[2rem] border border-[var(--border)] bg-[var(--background-secondary)] p-6 shadow-sm">
+              <p className="text-sm font-semibold text-[var(--foreground)]">Tu perfil</p>
+              <div className="mt-4 space-y-3 text-sm text-[var(--text-muted)]">
                 <p className="flex items-center gap-2">
                   <UserRound size={16} />
                   Alejandro Ruiz - Barber Senior
@@ -396,13 +410,13 @@ export function EmployeeWorkspace({
 
       {initialView === "servicios" ? (
         <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-          <section className="rounded-[2rem] border border-zinc-200 bg-white p-6 shadow-sm">
+          <section className="rounded-[2rem] border border-[var(--border)] bg-[var(--background-secondary)] p-6 shadow-sm">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-lg font-semibold text-zinc-900">Mis servicios</p>
-                <p className="mt-1 text-sm text-zinc-600">Solo ves los que te asignaron.</p>
+                <p className="text-lg font-semibold text-[var(--foreground)]">Mis servicios</p>
+                <p className="mt-1 text-sm text-[var(--text-muted)]">Solo ves los que te asignaron.</p>
               </div>
-              <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-700">
+              <span className="rounded-full bg-[var(--background)] px-3 py-1 text-xs font-semibold text-[var(--text-muted)]">
                 {linkedServices.length} servicios
               </span>
             </div>
@@ -414,14 +428,19 @@ export function EmployeeWorkspace({
                   onClick={() => setSelectedServiceId(service.id)}
                   className={`cursor-pointer rounded-3xl border p-5 transition ${
                     selectedServiceId === service.id
-                      ? "border-amber-300 bg-gradient-to-br from-amber-50 to-orange-50 shadow-sm"
-                      : "border-zinc-200 bg-zinc-50 hover:border-zinc-300"
+                      ? "border-[var(--hover)]/30"
+                      : "border-[var(--border)] bg-[var(--background)] hover:border-[var(--hover)]/20"
                   }`}
+                  style={
+                    selectedServiceId === service.id
+                      ? { background: "color-mix(in srgb, var(--hover) 8%, var(--background-secondary))" }
+                      : undefined
+                  }
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-lg font-semibold text-zinc-900">{service.name}</p>
-                      <p className="mt-1 text-sm text-zinc-600">{service.category}</p>
+                      <p className="text-lg font-semibold text-[var(--foreground)]">{service.name}</p>
+                      <p className="mt-1 text-sm text-[var(--text-muted)]">{service.category}</p>
                     </div>
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-semibold ${getDemandClassName(
@@ -433,10 +452,10 @@ export function EmployeeWorkspace({
                   </div>
 
                   <div className="mt-4 flex flex-wrap gap-2">
-                    <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
+                    <span className="rounded-full bg-[var(--background-secondary)] px-3 py-1 text-xs font-semibold text-[var(--foreground)]">
                       {service.duration}
                     </span>
-                    <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
+                    <span className="rounded-full bg-[var(--background-secondary)] px-3 py-1 text-xs font-semibold text-[var(--foreground)]">
                       {service.price}
                     </span>
                   </div>
@@ -445,13 +464,18 @@ export function EmployeeWorkspace({
             </div>
           </section>
 
-          <section className="rounded-[2rem] border border-zinc-200 bg-white p-6 shadow-sm">
-            <p className="text-sm font-semibold text-zinc-900">Detalle del servicio</p>
-            <div className="mt-4 rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-5">
+          <section className="rounded-[2rem] border border-[var(--border)] bg-[var(--background-secondary)] p-6 shadow-sm">
+            <p className="text-sm font-semibold text-[var(--foreground)]">Detalle del servicio</p>
+            <div
+              className="mt-4 rounded-3xl border border-[var(--hover)]/20 p-5"
+              style={{
+                background: "color-mix(in srgb, var(--hover) 8%, var(--background-secondary))",
+              }}
+            >
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="text-xl font-semibold text-zinc-900">{selectedService?.name}</p>
-                  <p className="mt-1 text-sm text-zinc-600">{selectedService?.category}</p>
+                  <p className="text-xl font-semibold text-[var(--foreground)]">{selectedService?.name}</p>
+                  <p className="mt-1 text-sm text-[var(--text-muted)]">{selectedService?.category}</p>
                 </div>
                 <span
                   className={`rounded-full px-3 py-1 text-xs font-semibold ${getDemandClassName(
@@ -486,13 +510,13 @@ export function EmployeeWorkspace({
 
       {initialView === "agenda" ? (
         <div className="grid gap-6 xl:grid-cols-[1.12fr_0.88fr]">
-          <section className="rounded-[2rem] border border-zinc-200 bg-white p-6 shadow-sm">
+          <section className="rounded-[2rem] border border-[var(--border)] bg-[var(--background-secondary)] p-6 shadow-sm">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-lg font-semibold text-zinc-900">Mis citas</p>
-                <p className="mt-1 text-sm text-zinc-600">Marca el avance de cada una.</p>
+                <p className="text-lg font-semibold text-[var(--foreground)]">Mis citas</p>
+                <p className="mt-1 text-sm text-[var(--text-muted)]">Marca el avance de cada una.</p>
               </div>
-              <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-semibold text-zinc-700">
+              <span className="rounded-full bg-[var(--background)] px-3 py-1 text-xs font-semibold text-[var(--text-muted)]">
                 {appointments.length} citas
               </span>
             </div>
@@ -504,19 +528,24 @@ export function EmployeeWorkspace({
                   onClick={() => setSelectedAppointmentId(appointment.id)}
                   className={`cursor-pointer rounded-3xl border p-5 transition ${
                     selectedAppointmentId === appointment.id
-                      ? "border-sky-300 bg-gradient-to-br from-sky-50 to-cyan-50 shadow-sm"
-                      : "border-zinc-200 bg-zinc-50 hover:border-zinc-300"
+                      ? "border-[var(--hover)]/30"
+                      : "border-[var(--border)] bg-[var(--background)] hover:border-[var(--hover)]/20"
                   }`}
+                  style={
+                    selectedAppointmentId === appointment.id
+                      ? { background: "color-mix(in srgb, var(--hover) 6%, var(--background-secondary))" }
+                      : undefined
+                  }
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <div className="flex items-center gap-3">
-                        <p className="text-base font-semibold text-zinc-900">{appointment.client}</p>
-                        <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
+                        <p className="text-base font-semibold text-[var(--foreground)]">{appointment.client}</p>
+                        <span className="rounded-full bg-[var(--background-secondary)] px-3 py-1 text-xs font-semibold text-[var(--text-muted)]">
                           {appointment.time}
                         </span>
                       </div>
-                      <p className="mt-2 text-sm text-zinc-600">{appointment.service}</p>
+                      <p className="mt-2 text-sm text-[var(--text-muted)]">{appointment.service}</p>
                     </div>
 
                     <button
@@ -525,7 +554,7 @@ export function EmployeeWorkspace({
                         event.stopPropagation();
                         advanceAppointment(appointment.id);
                       }}
-                      className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-zinc-900 transition hover:bg-zinc-100"
+                      className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--background-secondary)] px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition hover:bg-[var(--background)]"
                     >
                       Cambiar estado
                       <ChevronRight size={16} />
@@ -540,7 +569,7 @@ export function EmployeeWorkspace({
                     >
                       {appointment.status}
                     </span>
-                    <p className="text-sm text-zinc-600">{appointment.note}</p>
+                    <p className="text-sm text-[var(--text-muted)]">{appointment.note}</p>
                   </div>
                 </article>
               ))}
@@ -548,17 +577,22 @@ export function EmployeeWorkspace({
           </section>
 
           <div className="grid gap-6">
-            <section className="rounded-[2rem] border border-zinc-200 bg-white p-6 shadow-sm">
-              <p className="text-sm font-semibold text-zinc-900">Cita elegida</p>
+            <section className="rounded-[2rem] border border-[var(--border)] bg-[var(--background-secondary)] p-6 shadow-sm">
+              <p className="text-sm font-semibold text-[var(--foreground)]">Cita elegida</p>
               {selectedAppointment ? (
-                <div className="mt-4 rounded-3xl border border-sky-200 bg-gradient-to-br from-sky-50 to-cyan-50 p-5">
+                <div
+                  className="mt-4 rounded-3xl border border-[var(--hover)]/20 p-5"
+                  style={{
+                    background: "color-mix(in srgb, var(--hover) 6%, var(--background-secondary))",
+                  }}
+                >
                   <div className="flex items-center justify-between gap-3">
-                    <p className="font-semibold text-zinc-900">{selectedAppointment.client}</p>
-                    <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
+                    <p className="font-semibold text-[var(--foreground)]">{selectedAppointment.client}</p>
+                    <span className="rounded-full bg-[var(--background-secondary)] px-3 py-1 text-xs font-semibold text-[var(--text-muted)]">
                       {selectedAppointment.time}
                     </span>
                   </div>
-                  <p className="mt-2 text-sm text-zinc-600">{selectedAppointment.service}</p>
+                  <p className="mt-2 text-sm text-[var(--text-muted)]">{selectedAppointment.service}</p>
                   <span
                     className={`mt-4 inline-flex rounded-full px-3 py-1 text-xs font-semibold ${getAppointmentStatusClassName(
                       selectedAppointment.status,
@@ -566,36 +600,40 @@ export function EmployeeWorkspace({
                   >
                     {selectedAppointment.status}
                   </span>
-                  <p className="mt-4 text-sm text-zinc-700">{selectedAppointment.note}</p>
+                  <p className="mt-4 text-sm text-[var(--foreground)]">{selectedAppointment.note}</p>
 
                   <button
                     type="button"
                     onClick={() => advanceAppointment(selectedAppointment.id)}
-                    className="mt-5 inline-flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-zinc-800"
+                    className="mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-[var(--background)] transition hover:opacity-90"
+                    style={{ background: "var(--foreground)" }}
                   >
                     Actualizar cita
                     <ChevronRight size={16} />
                   </button>
                 </div>
               ) : (
-                <p className="mt-4 text-sm text-zinc-600">Elige una cita para ver mas.</p>
+                <p className="mt-4 text-sm text-[var(--text-muted)]">Elige una cita para ver mas.</p>
               )}
             </section>
 
-            <section className="rounded-[2rem] border border-zinc-200 bg-white p-6 shadow-sm">
-              <p className="text-sm font-semibold text-zinc-900">Siguiente cita</p>
+            <section className="rounded-[2rem] border border-[var(--border)] bg-[var(--background-secondary)] p-6 shadow-sm">
+              <p className="text-sm font-semibold text-[var(--foreground)]">Siguiente cita</p>
               {nextAppointment ? (
-                <div className="mt-4 rounded-3xl bg-zinc-900 p-5 text-white">
-                  <p className="text-sm text-zinc-300">{nextAppointment.time}</p>
+                <div
+                  className="mt-4 rounded-3xl p-5"
+                  style={{ background: "var(--foreground)", color: "var(--background)" }}
+                >
+                  <p className="text-sm opacity-60">{nextAppointment.time}</p>
                   <p className="mt-1 text-xl font-bold">{nextAppointment.client}</p>
-                  <p className="mt-2 text-sm text-zinc-300">{nextAppointment.service}</p>
-                  <div className="mt-4 flex items-center gap-2 text-sm text-zinc-200">
+                  <p className="mt-2 text-sm opacity-60">{nextAppointment.service}</p>
+                  <div className="mt-4 flex items-center gap-2 text-sm opacity-80">
                     <BadgeCheck size={16} />
                     {nextAppointment.note}
                   </div>
                 </div>
               ) : (
-                <p className="mt-4 text-sm text-zinc-600">No hay citas por atender.</p>
+                <p className="mt-4 text-sm text-[var(--text-muted)]">No hay citas por atender.</p>
               )}
             </section>
           </div>
@@ -626,16 +664,16 @@ function KpiCard({
       onClick={onClick}
       className={`rounded-3xl border p-5 text-left transition ${
         isActive
-          ? "border-zinc-900 bg-white shadow-sm"
-          : "border-zinc-200 bg-zinc-50 hover:-translate-y-0.5 hover:bg-white"
+          ? "border-[var(--foreground)] bg-[var(--background-secondary)] shadow-sm"
+          : "border-[var(--border)] bg-[var(--background)] hover:-translate-y-0.5 hover:bg-[var(--background-secondary)]"
       }`}
     >
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm font-semibold text-zinc-700">{label}</p>
-        <div className="rounded-2xl bg-white p-2 text-zinc-700">{icon}</div>
+        <p className="text-sm font-semibold text-[var(--foreground)]">{label}</p>
+        <div className="rounded-2xl bg-[var(--background-secondary)] p-2 text-[var(--foreground)]">{icon}</div>
       </div>
-      <p className="mt-4 text-3xl font-bold tracking-tight text-zinc-900">{value}</p>
-      <p className="mt-2 text-sm text-zinc-600">{detail}</p>
+      <p className="mt-4 text-3xl font-bold tracking-tight text-[var(--foreground)]">{value}</p>
+      <p className="mt-2 text-sm text-[var(--text-muted)]">{detail}</p>
     </button>
   );
 }
@@ -650,45 +688,45 @@ function MiniInfo({
   detail: string;
 }) {
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-4">
-      <div className="flex items-center gap-2 text-zinc-800">
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--background)] px-4 py-4">
+      <div className="flex items-center gap-2 text-[var(--foreground)]">
         {icon}
         <p className="text-sm font-semibold">{title}</p>
       </div>
-      <p className="mt-2 text-sm text-zinc-600">{detail}</p>
+      <p className="mt-2 text-sm text-[var(--text-muted)]">{detail}</p>
     </div>
   );
 }
 
 function InfoTile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl bg-white px-4 py-4">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{label}</p>
-      <p className="mt-2 text-sm font-semibold text-zinc-900">{value}</p>
+    <div className="rounded-2xl bg-[var(--background-secondary)] px-4 py-4">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">{label}</p>
+      <p className="mt-2 text-sm font-semibold text-[var(--foreground)]">{value}</p>
     </div>
   );
 }
 
 function getDemandClassName(demand: string) {
   if (demand === "Muy pedido") {
-    return "bg-amber-100 text-amber-900";
+    return "bg-[var(--hover)]/15 text-[var(--hover)]";
   }
 
   if (demand === "Alta demanda") {
-    return "bg-sky-100 text-sky-900";
+    return "bg-[var(--hover)]/10 text-[var(--hover)]";
   }
 
-  return "bg-emerald-100 text-emerald-900";
+  return "bg-[var(--hover)]/10 text-[var(--hover)]";
 }
 
 function getAppointmentStatusClassName(status: Appointment["status"]) {
   if (status === "En curso") {
-    return "bg-amber-100 text-amber-900";
+    return "bg-[var(--hover)]/15 text-[var(--hover)]";
   }
 
   if (status === "Confirmada") {
-    return "bg-emerald-100 text-emerald-900";
+    return "bg-[var(--hover)]/15 text-[var(--hover)]";
   }
 
-  return "bg-sky-100 text-sky-900";
+  return "bg-[var(--text-muted)]/15 text-[var(--text-muted)]";
 }

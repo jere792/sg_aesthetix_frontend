@@ -21,7 +21,7 @@ const emptyDraft = {
 };
 
 const inputClassName =
-  "w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm outline-none transition placeholder:text-zinc-400 focus:border-zinc-900";
+  "w-full rounded-2xl border border-[var(--border)] px-4 py-3 text-sm outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--foreground)]";
 
 export function AgendaManagement() {
   const [appointments, setAppointments] = useState<AppointmentWithDetails[]>([]);
@@ -121,7 +121,7 @@ export function AgendaManagement() {
   return (
     <div className="grid gap-6 xl:grid-cols-[1.2fr_0.92fr]">
       <div className="space-y-4">
-        <div className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm">
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-5 shadow-sm">
           <div className="grid gap-4 md:grid-cols-3">
             <KpiCard title="Citas hoy" value={String(appointments.length)} detail="Turnos del dia" />
             <KpiCard title="Pendientes" value={String(pendientes)} detail="Por confirmar" />
@@ -129,12 +129,12 @@ export function AgendaManagement() {
           </div>
 
           <div className="mt-4 flex items-center gap-3">
-            <label className="flex flex-1 items-center gap-3 rounded-2xl border border-zinc-200 px-4 py-3">
-              <Search size={16} className="text-zinc-400" />
+            <label className="flex flex-1 items-center gap-3 rounded-2xl border border-[var(--border)] px-4 py-3">
+              <Search size={16} className="text-[var(--text-muted)]" />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="w-full bg-transparent text-sm outline-none placeholder:text-zinc-400"
+                className="w-full bg-transparent text-sm outline-none placeholder:text-[var(--text-muted)]"
                 placeholder="Buscar por cliente, servicio, persona o hora"
               />
             </label>
@@ -142,7 +142,7 @@ export function AgendaManagement() {
               type="button"
               onClick={fetchAppointments}
               disabled={loading}
-              className="inline-flex items-center gap-2 rounded-2xl border border-zinc-200 px-4 py-3 text-sm text-zinc-600 transition hover:bg-zinc-50 disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-2xl border border-[var(--border)] px-4 py-3 text-sm text-[var(--text-muted)] transition hover:bg-[var(--background)] disabled:opacity-50"
               title="Recargar"
             >
               <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
@@ -151,13 +151,13 @@ export function AgendaManagement() {
         </div>
 
         {loading && appointments.length === 0 ? (
-          <div className="flex items-center justify-center py-20 text-sm text-zinc-500">
+          <div className="flex items-center justify-center py-20 text-sm text-[var(--text-muted)]">
             Cargando citas...
           </div>
         ) : error ? (
-          <div className="rounded-3xl border border-red-200 bg-red-50 p-5 text-sm text-red-700">{error}</div>
+          <div className="rounded-3xl border border-[var(--destructive-border)] bg-[var(--destructive-hover)] p-5 text-sm text-[var(--destructive)]">{error}</div>
         ) : appointments.length === 0 ? (
-          <div className="flex items-center justify-center py-20 text-sm text-zinc-500">
+          <div className="flex items-center justify-center py-20 text-sm text-[var(--text-muted)]">
             No hay citas para hoy
           </div>
         ) : (
@@ -168,19 +168,19 @@ export function AgendaManagement() {
                 onClick={() => handleSelect(appointment)}
                 className={`cursor-pointer rounded-3xl border p-5 shadow-sm transition ${
                   selectedId === appointment.id
-                    ? "border-sky-300 bg-gradient-to-br from-sky-50 to-cyan-50"
-                    : "border-zinc-200 bg-white hover:-translate-y-0.5 hover:shadow-md"
+                    ? "border-[var(--hover)]/20 bg-[var(--background)]"
+                    : "border-[var(--border)] bg-[var(--background-secondary)] hover:-translate-y-0.5 hover:shadow-md"
                 }`}
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <div className="flex items-center gap-3">
-                      <p className="text-lg font-semibold text-zinc-900">{appointment.cliente_nombre}</p>
-                      <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-zinc-700">
+                      <p className="text-lg font-semibold text-[var(--foreground)]">{appointment.cliente_nombre}</p>
+                      <span className="rounded-full bg-[var(--background-secondary)] px-3 py-1 text-xs font-semibold text-[var(--foreground)]">
                         {appointment.hora_inicio.slice(0, 5)}
                       </span>
                     </div>
-                    <p className="mt-1 text-sm text-zinc-600">{appointment.servicio_nombre}</p>
+                    <p className="mt-1 text-sm text-[var(--text-muted)]">{appointment.servicio_nombre}</p>
                   </div>
                   <span className={`rounded-full px-3 py-1 text-xs font-semibold ${getStatusClassName(appointment.estado)}`}>
                     {appointment.estado}
@@ -188,17 +188,17 @@ export function AgendaManagement() {
                 </div>
 
                 <div className="mt-4 grid gap-3 md:grid-cols-[180px_1fr]">
-                  <div className="rounded-2xl bg-white px-4 py-3">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">
+                  <div className="rounded-2xl bg-[var(--background-secondary)] px-4 py-3">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
                       Profesional
                     </p>
-                    <p className="mt-2 text-sm font-semibold text-zinc-900">{appointment.empleado_nombre}</p>
+                    <p className="mt-2 text-sm font-semibold text-[var(--foreground)]">{appointment.empleado_nombre}</p>
                   </div>
-                  <div className="rounded-2xl bg-white px-4 py-3">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">
+                  <div className="rounded-2xl bg-[var(--background-secondary)] px-4 py-3">
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
                       Nota
                     </p>
-                    <p className="mt-2 text-sm text-zinc-700">{appointment.observaciones || "—"}</p>
+                    <p className="mt-2 text-sm text-[var(--foreground)]">{appointment.observaciones || "—"}</p>
                   </div>
                 </div>
               </article>
@@ -208,9 +208,9 @@ export function AgendaManagement() {
       </div>
 
       <aside className="space-y-4">
-        <div className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-semibold text-zinc-900">Editar cita</p>
-          <p className="mt-1 text-sm text-zinc-600">
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-5 shadow-sm">
+          <p className="text-sm font-semibold text-[var(--foreground)]">Editar cita</p>
+          <p className="mt-1 text-sm text-[var(--text-muted)]">
             Cambia la hora, el estado o la nota de la cita.
           </p>
 
@@ -225,18 +225,18 @@ export function AgendaManagement() {
               />
             </Field>
             <Field label="Cliente">
-              <div className={inputClassName + " bg-zinc-50 text-zinc-600"}>
+              <div className={inputClassName + " bg-[var(--background)] text-[var(--text-muted)]"}>
                 {selectedAppointment?.cliente_nombre || "—"}
               </div>
             </Field>
             <Field label="Servicio">
-              <div className={inputClassName + " bg-zinc-50 text-zinc-600"}>
+              <div className={inputClassName + " bg-[var(--background)] text-[var(--text-muted)]"}>
                 {selectedAppointment?.servicio_nombre || "—"}
               </div>
             </Field>
             <div className="grid gap-3 sm:grid-cols-2">
               <Field label="Profesional">
-                <div className={inputClassName + " bg-zinc-50 text-zinc-600"}>
+                <div className={inputClassName + " bg-[var(--background)] text-[var(--text-muted)]"}>
                   {selectedAppointment?.empleado_nombre || "—"}
                 </div>
               </Field>
@@ -269,7 +269,7 @@ export function AgendaManagement() {
               type="button"
               onClick={() => setIsConfirmOpen(true)}
               disabled={!selectedAppointment}
-              className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white transition enabled:hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--button-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--button-primary-foreground)] transition enabled:hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <PencilLine size={16} />
               Guardar cambios
@@ -278,7 +278,7 @@ export function AgendaManagement() {
               type="button"
               onClick={() => setIsDeleteConfirmOpen(true)}
               disabled={!selectedAppointment}
-              className="inline-flex items-center gap-2 rounded-full border border-red-200 px-5 py-2.5 text-sm font-semibold text-red-700 transition enabled:hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--destructive-border)] px-5 py-2.5 text-sm font-semibold text-[var(--destructive)] transition enabled:hover:bg-[var(--destructive-hover)] disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Trash2 size={16} />
               Eliminar cita
@@ -286,9 +286,9 @@ export function AgendaManagement() {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-semibold text-zinc-900">Lectura rapida</p>
-          <div className="mt-4 space-y-3 text-sm text-zinc-600">
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-5 shadow-sm">
+          <p className="text-sm font-semibold text-[var(--foreground)]">Lectura rapida</p>
+          <div className="mt-4 space-y-3 text-sm text-[var(--text-muted)]">
             <p className="flex items-center gap-2">
               <CalendarClock size={15} />
               Ordena la jornada por prioridad y horario
@@ -342,10 +342,10 @@ function KpiCard({
   detail: string;
 }) {
   return (
-    <article className="rounded-3xl border border-zinc-200 bg-zinc-50 p-4">
-      <p className="text-sm font-semibold text-zinc-700">{title}</p>
-      <p className="mt-3 text-3xl font-bold tracking-tight text-zinc-900">{value}</p>
-      <p className="mt-2 text-sm text-zinc-600">{detail}</p>
+    <article className="rounded-3xl border border-[var(--border)] bg-[var(--background)] p-4">
+      <p className="text-sm font-semibold text-[var(--foreground)]">{title}</p>
+      <p className="mt-3 text-3xl font-bold tracking-tight text-[var(--foreground)]">{value}</p>
+      <p className="mt-2 text-sm text-[var(--text-muted)]">{detail}</p>
     </article>
   );
 }
@@ -353,15 +353,15 @@ function KpiCard({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="space-y-2">
-      <span className="text-sm font-medium text-zinc-700">{label}</span>
+      <span className="text-sm font-medium text-[var(--foreground)]">{label}</span>
       {children}
     </label>
   );
 }
 
 function getStatusClassName(status: string) {
-  if (status === "Completada") return "bg-emerald-100 text-emerald-900";
-  if (status === "En curso") return "bg-amber-100 text-amber-900";
-  if (status === "Confirmada") return "bg-sky-100 text-sky-900";
-  return "bg-rose-100 text-rose-900";
+  if (status === "Completada") return "bg-[var(--hover)]/15 text-[var(--hover)]";
+  if (status === "En curso") return "bg-[var(--hover)]/15 text-[var(--hover)]";
+  if (status === "Confirmada") return "bg-[var(--hover)]/15 text-[var(--hover)]";
+  return "bg-[var(--warning)]/15 text-[var(--warning)]";
 }

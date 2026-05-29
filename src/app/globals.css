@@ -11,6 +11,12 @@
   --hover: #3A5A36;
   --warning: #D32F2F;
   --border: #E0E0E0;
+  --button-primary: #1A1A1A;
+  --button-primary-foreground: #FFFFFF;
+  --destructive: #D32F2F;
+  --destructive-foreground: #FFFFFF;
+  --destructive-border: #FECACA;
+  --destructive-hover: #FEF2F2;
   --font-headline: var(--font-archivo-narrow);
   --font-body: var(--font-hanken-grotesk);
   --font-label: var(--font-geist-sans);
@@ -27,6 +33,12 @@
   --hover: #3A5A36;
   --warning: #F8ACA2;
   --border: transparent;
+  --button-primary: #E5E2E1;
+  --button-primary-foreground: #1E1E1E;
+  --destructive: #F8ACA2;
+  --destructive-foreground: #1E1E1E;
+  --destructive-border: rgba(248, 172, 162, 0.25);
+  --destructive-hover: rgba(248, 172, 162, 0.08);
 }
 
 @theme inline {
@@ -40,6 +52,12 @@
   --color-hover: var(--hover);
   --color-warning: var(--warning);
   --color-border: var(--border);
+  --color-button-primary: var(--button-primary);
+  --color-button-primary-foreground: var(--button-primary-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-border: var(--destructive-border);
+  --color-destructive-hover: var(--destructive-hover);
   --font-headline: var(--font-headline);
   --font-body: var(--font-body);
   --font-label: var(--font-label);

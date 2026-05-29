@@ -29,7 +29,7 @@ const emptyDraft: ServiceDraft = {
 };
 
 const inputClassName =
-  "w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm outline-none transition placeholder:text-zinc-400 focus:border-zinc-900";
+  "w-full rounded-2xl border border-[var(--border)] px-4 py-3 text-sm outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--foreground)]";
 
 export function ServicesManagement() {
   const supabase = createClient();
@@ -97,45 +97,45 @@ export function ServicesManagement() {
 
   if (loading) return (
     <div className="flex items-center justify-center py-20">
-      <Loader2 size={24} className="animate-spin text-zinc-400" />
+      <Loader2 size={24} className="animate-spin text-[var(--text-muted)]" />
     </div>
   );
 
   return (
     <div className="grid gap-6 xl:grid-cols-[1.15fr_0.95fr]">
       <div className="space-y-4">
-        <div className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm">
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-5 shadow-sm">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-semibold text-zinc-900">Catalogo de servicios</p>
-              <p className="mt-1 text-sm text-zinc-600">
+              <p className="text-sm font-semibold text-[var(--foreground)]">Catalogo de servicios</p>
+              <p className="mt-1 text-sm text-[var(--text-muted)]">
                 Ordena tus servicios, cambia precios y elige quien los atiende.
               </p>
             </div>
             <button
               type="button"
               onClick={() => { setSelectedId(null); setDraft(emptyDraft); }}
-              className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-zinc-800"
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--button-primary)] px-4 py-2 text-sm font-semibold text-[var(--button-primary-foreground)] transition hover:opacity-90"
             >
               <Plus size={16} />
               Nuevo servicio
             </button>
           </div>
 
-          <label className="mt-4 flex items-center gap-3 rounded-2xl border border-zinc-200 px-4 py-3">
-            <Search size={16} className="text-zinc-400" />
+          <label className="mt-4 flex items-center gap-3 rounded-2xl border border-[var(--border)] px-4 py-3">
+            <Search size={16} className="text-[var(--text-muted)]" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full bg-transparent text-sm outline-none placeholder:text-zinc-400"
+              className="w-full bg-transparent text-sm outline-none placeholder:text-[var(--text-muted)]"
               placeholder="Buscar por nombre o descripcion"
             />
           </label>
         </div>
 
-        <div className="overflow-hidden rounded-3xl border border-zinc-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] shadow-sm">
           <table className="min-w-full text-sm">
-            <thead className="bg-zinc-50 text-left text-zinc-600">
+            <thead className="bg-[var(--background)] text-left text-[var(--text-muted)]">
               <tr>
                 <th className="px-4 py-3">Servicio</th>
                 <th className="px-4 py-3">Duracion</th>
@@ -148,25 +148,25 @@ export function ServicesManagement() {
               {filteredServices.map((service) => (
                 <tr
                   key={service.id}
-                  className={`cursor-pointer border-t border-zinc-100 transition hover:bg-zinc-50 ${
-                    selectedId === service.id ? "bg-zinc-50" : ""
+                  className={`cursor-pointer border-t border-transparent/5 transition hover:bg-[var(--background)] ${
+                    selectedId === service.id ? "bg-[var(--background)]" : ""
                   }`}
                   onClick={() => { setSelectedId(service.id); setDraft(toDraft(service)); }}
                 >
                   <td className="px-4 py-3">
-                    <p className="font-semibold text-zinc-900">{service.nombre}</p>
-                    <p className="text-xs text-zinc-500 line-clamp-1">{service.descripcion}</p>
+                    <p className="font-semibold text-[var(--foreground)]">{service.nombre}</p>
+                    <p className="text-xs text-[var(--text-muted)] line-clamp-1">{service.descripcion}</p>
                   </td>
-                  <td className="px-4 py-3 text-zinc-700">{service.duracion_minutos} min</td>
-                  <td className="px-4 py-3 text-zinc-700">S/{service.precio}</td>
+                  <td className="px-4 py-3 text-[var(--foreground)]">{service.duracion_minutos} min</td>
+                  <td className="px-4 py-3 text-[var(--foreground)]">S/{service.precio}</td>
                   <td className="px-4 py-3">
                     <span className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                      service.esta_activo ? "bg-green-100 text-green-700" : "bg-zinc-100 text-zinc-500"
+                      service.esta_activo ? "bg-[var(--hover)]/15 text-[var(--hover)]" : "bg-[var(--background)] text-[var(--text-muted)]"
                     }`}>
                       {service.esta_activo ? "Activo" : "Inactivo"}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-zinc-700">{service.puntos_otorgados}</td>
+                  <td className="px-4 py-3 text-[var(--foreground)]">{service.puntos_otorgados}</td>
                 </tr>
               ))}
             </tbody>
@@ -175,8 +175,8 @@ export function ServicesManagement() {
       </div>
 
       <aside className="space-y-4">
-        <div className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-semibold text-zinc-900">
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-5 shadow-sm">
+          <p className="text-sm font-semibold text-[var(--foreground)]">
             {selectedId ? "Editar servicio" : "Crear servicio"}
           </p>
           <div className="mt-4 grid gap-3">
@@ -217,25 +217,25 @@ export function ServicesManagement() {
           <div className="mt-5 flex flex-wrap gap-3">
             <button type="button" onClick={() => setIsConfirmOpen(true)}
               disabled={!draft.nombre}
-              className="rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800 disabled:opacity-40">
+              className="rounded-full bg-[var(--button-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--button-primary-foreground)] transition hover:opacity-90 disabled:opacity-40">
               {saving ? "Guardando..." : selectedId ? "Guardar cambios" : "Crear servicio"}
             </button>
             <button type="button" onClick={() => setDraft(selectedService ? toDraft(selectedService) : emptyDraft)}
-              className="rounded-full border border-zinc-200 px-5 py-2.5 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-100">
+              className="rounded-full border border-[var(--border)] px-5 py-2.5 text-sm font-semibold text-[var(--foreground)] transition hover:bg-[var(--background)]">
               Restablecer
             </button>
             {selectedId && (
               <button type="button" onClick={() => setIsDeleteOpen(true)}
-                className="rounded-full border border-red-200 px-5 py-2.5 text-sm font-semibold text-red-500 transition hover:bg-red-50">
+                className="rounded-full border border-[var(--destructive-border)] px-5 py-2.5 text-sm font-semibold text-[var(--destructive)] transition hover:bg-[var(--destructive-hover)]">
                 Eliminar
               </button>
             )}
           </div>
         </div>
 
-        <div className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm">
-          <p className="text-sm font-semibold text-zinc-900">Datos del servicio</p>
-          <div className="mt-4 space-y-3 text-sm text-zinc-600">
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-5 shadow-sm">
+          <p className="text-sm font-semibold text-[var(--foreground)]">Datos del servicio</p>
+          <div className="mt-4 space-y-3 text-sm text-[var(--text-muted)]">
             <p className="flex items-center gap-2"><Clock3 size={15} />Tiempo aproximado del servicio</p>
             <p className="flex items-center gap-2"><DollarSign size={15} />Precio base del servicio</p>
             <p className="flex items-center gap-2"><Sparkles size={15} />Descripcion para mostrar al cliente</p>
@@ -268,7 +268,7 @@ export function ServicesManagement() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="space-y-2">
-      <span className="text-sm font-medium text-zinc-700">{label}</span>
+      <span className="text-sm font-medium text-[var(--foreground)]">{label}</span>
       {children}
     </label>
   );

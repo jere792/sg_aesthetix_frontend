@@ -27,7 +27,7 @@ const emptyDraft: RewardDraft = {
 };
 
 const inputClassName =
-  "w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm outline-none transition placeholder:text-zinc-400 focus:border-zinc-900";
+  "w-full rounded-2xl border border-[var(--border)] px-4 py-3 text-sm outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--foreground)]";
 
 export function LoyaltyManagement() {
   const [recompensas, setRecompensas] = useState<RecompensaPuntos[]>([]);
@@ -201,15 +201,15 @@ export function LoyaltyManagement() {
 
   return (
     <>
-      <div className="mb-6 rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm">
+      <div className="mb-6 rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-5 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="rounded-2xl bg-zinc-100 p-3">
-              <QrCode size={18} className="text-zinc-700" />
+            <div className="rounded-2xl bg-[var(--background)] p-3">
+              <QrCode size={18} className="text-[var(--foreground)]" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-zinc-900">Promoción vía QR</p>
-              <p className="text-sm text-zinc-600">
+              <p className="text-sm font-semibold text-[var(--foreground)]">Promoción vía QR</p>
+              <p className="text-sm text-[var(--text-muted)]">
                 {promocionActiva
                   ? "El QR está activo. Los clientes pueden registrar y recibir puntos."
                   : "El QR está desactivado. La página /promocion no mostrará el formulario."}
@@ -221,30 +221,30 @@ export function LoyaltyManagement() {
             onClick={handleTogglePromocion}
             disabled={loadingConfig || toggling}
             className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full transition-colors ${
-              promocionActiva ? "bg-emerald-500" : "bg-zinc-300"
+              promocionActiva ? "bg-[var(--hover)]" : "bg-[var(--text-muted)]"
             } ${loadingConfig || toggling ? "opacity-50" : ""}`}
             role="switch"
             aria-checked={promocionActiva}
           >
             <span
-              className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition-transform ${
+              className={`inline-block h-5 w-5 transform rounded-full bg-[var(--background-secondary)] shadow-sm ring-0 transition-transform ${
                 promocionActiva ? "translate-x-6" : "translate-x-1"
               }`}
             />
           </button>
         </div>
         {errorPromo && (
-          <p className="mt-3 text-xs font-medium text-red-600">{errorPromo}</p>
+          <p className="mt-3 text-xs font-medium text-[var(--destructive)]">{errorPromo}</p>
         )}
       </div>
 
       {/* Lista de registros pendientes */}
       {promocionActiva && (
-        <div className="mb-6 rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm">
+        <div className="mb-6 rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-5 shadow-sm">
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-zinc-900">Registros pendientes</p>
-              <p className="text-sm text-zinc-600">
+              <p className="text-sm font-semibold text-[var(--foreground)]">Registros pendientes</p>
+              <p className="text-sm text-[var(--text-muted)]">
                 {loadingRegistros
                   ? "Cargando..."
                   : `${pendingRegistros.length} cliente(s) esperando aprobación`}
@@ -254,19 +254,19 @@ export function LoyaltyManagement() {
 
           {loadingRegistros ? (
             <div className="flex items-center justify-center py-8">
-              <div className="h-4 w-4 animate-pulse rounded-full bg-zinc-300" />
+              <div className="h-4 w-4 animate-pulse rounded-full bg-[var(--text-muted)]" />
             </div>
           ) : pendingRegistros.length === 0 ? (
-            <p className="py-6 text-center text-sm text-zinc-400">
+            <p className="py-6 text-center text-sm text-[var(--text-muted)]">
               No hay registros pendientes.
             </p>
           ) : (
-            <div className="divide-y divide-zinc-100">
+            <div className="divide-y divide-transparent/5">
               {pendingRegistros.map((cliente) => (
                 <div key={cliente.id} className="flex items-center justify-between gap-4 py-3">
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-zinc-900">{cliente.nombres}</p>
-                    <p className="text-xs text-zinc-500">
+                    <p className="text-sm font-semibold text-[var(--foreground)]">{cliente.nombres}</p>
+                    <p className="text-xs text-[var(--text-muted)]">
                       DNI: {cliente.dni ?? "---"} · Tel: {cliente.telefono ?? "---"}
                     </p>
                   </div>
@@ -274,14 +274,14 @@ export function LoyaltyManagement() {
                     <button
                       type="button"
                       onClick={() => handleApprove(cliente.id)}
-                      className="rounded-full bg-emerald-600 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-emerald-700"
+                      className="rounded-full bg-[var(--hover)] px-4 py-1.5 text-xs font-semibold text-white transition hover:opacity-90"
                     >
                       Aprobar
                     </button>
                     <button
                       type="button"
                       onClick={() => handleReject(cliente.id)}
-                      className="rounded-full border border-red-200 px-4 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-50"
+                      className="rounded-full border border-[var(--destructive-border)] px-4 py-1.5 text-xs font-semibold text-[var(--destructive)] transition hover:bg-[var(--destructive-hover)]"
                     >
                       Rechazar
                     </button>
@@ -294,11 +294,11 @@ export function LoyaltyManagement() {
       )}
 
       {/* Canjes pendientes */}
-      <div className="mb-6 rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm">
+      <div className="mb-6 rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-5 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <p className="text-sm font-semibold text-zinc-900">Canjes pendientes</p>
-            <p className="text-sm text-zinc-600">
+            <p className="text-sm font-semibold text-[var(--foreground)]">Canjes pendientes</p>
+            <p className="text-sm text-[var(--text-muted)]">
               {loadingCanjes
                 ? "Cargando..."
                 : `${pendingCanjes.length} canje(s) esperando aprobación`}
@@ -308,21 +308,21 @@ export function LoyaltyManagement() {
 
         {loadingCanjes ? (
           <div className="flex items-center justify-center py-8">
-            <div className="h-4 w-4 animate-pulse rounded-full bg-zinc-300" />
+            <div className="h-4 w-4 animate-pulse rounded-full bg-[var(--text-muted)]" />
           </div>
         ) : pendingCanjes.length === 0 ? (
-          <p className="py-6 text-center text-sm text-zinc-400">
+          <p className="py-6 text-center text-sm text-[var(--text-muted)]">
             No hay canjes pendientes.
           </p>
         ) : (
-          <div className="divide-y divide-zinc-100">
+          <div className="divide-y divide-transparent/5">
             {pendingCanjes.map((canje) => (
               <div key={canje.id} className="flex items-center justify-between gap-4 py-3">
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold text-zinc-900">
+                  <p className="text-sm font-semibold text-[var(--foreground)]">
                     {canje.clienteNombre}
                   </p>
-                  <p className="text-xs text-zinc-500">
+                  <p className="text-xs text-[var(--text-muted)]">
                     {canje.recompensa?.nombre ?? "—"} · {canje.puntosCanjeados} pts
                   </p>
                 </div>
@@ -337,7 +337,7 @@ export function LoyaltyManagement() {
                         console.error("Error al aprobar canje:", err);
                       }
                     }}
-                    className="rounded-full bg-emerald-600 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-emerald-700"
+                    className="rounded-full bg-[var(--hover)] px-4 py-1.5 text-xs font-semibold text-[var(--button-primary-foreground)] transition hover:opacity-90"
                   >
                     Aprobar
                   </button>
@@ -351,7 +351,7 @@ export function LoyaltyManagement() {
                         console.error("Error al rechazar canje:", err);
                       }
                     }}
-                    className="rounded-full border border-red-200 px-4 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-50"
+                    className="rounded-full border border-[var(--destructive-border)] px-4 py-1.5 text-xs font-semibold text-[var(--destructive)] transition hover:bg-[var(--destructive-hover)]"
                   >
                     Rechazar
                   </button>
@@ -367,15 +367,15 @@ export function LoyaltyManagement() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-zinc-900">Beneficios</p>
-              <p className="text-sm text-zinc-600">
+              <p className="text-sm font-semibold text-[var(--foreground)]">Beneficios</p>
+              <p className="text-sm text-[var(--text-muted)]">
                 {loading ? "Cargando..." : `${recompensas.length} beneficio(s) registrado(s)`}
               </p>
             </div>
             <button
               type="button"
               onClick={handleCreateMode}
-              className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-zinc-800"
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--button-primary)] px-4 py-2 text-sm font-semibold text-[var(--button-primary-foreground)] transition hover:opacity-90"
             >
               <Plus size={16} />
               Nuevo beneficio
@@ -383,13 +383,13 @@ export function LoyaltyManagement() {
           </div>
 
           {error && (
-            <div className="rounded-3xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</div>
+            <div className="rounded-3xl border border-[var(--destructive-border)] bg-[var(--destructive-hover)] p-4 text-sm text-[var(--destructive)]">{error}</div>
           )}
 
           {loading && recompensas.length === 0 ? (
-            <div className="flex items-center justify-center py-16 text-sm text-zinc-500">Cargando beneficios...</div>
+            <div className="flex items-center justify-center py-16 text-sm text-[var(--text-muted)]">Cargando beneficios...</div>
           ) : recompensas.length === 0 ? (
-            <div className="flex items-center justify-center py-16 text-sm text-zinc-500">No hay beneficios registrados.</div>
+            <div className="flex items-center justify-center py-16 text-sm text-[var(--text-muted)]">No hay beneficios registrados.</div>
           ) : (
             <div className="grid gap-4">
               {recompensas.map((r) => (
@@ -398,30 +398,30 @@ export function LoyaltyManagement() {
                   onClick={() => handleSelect(r)}
                   className={`cursor-pointer rounded-3xl border p-5 shadow-sm transition ${
                     selectedId === r.id
-                      ? "border-amber-300 bg-gradient-to-br from-amber-50 to-yellow-50"
-                      : "border-zinc-200 bg-white hover:-translate-y-0.5 hover:shadow-md"
+                      ? "border-[var(--hover)]/30 bg-[var(--hover)]/5"
+                      : "border-[var(--border)] bg-[var(--background-secondary)] hover:-translate-y-0.5 hover:shadow-md"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-lg font-semibold text-zinc-900">{r.nombre}</p>
-                      <p className="mt-1 text-sm text-zinc-600">
+                      <p className="text-lg font-semibold text-[var(--foreground)]">{r.nombre}</p>
+                      <p className="mt-1 text-sm text-[var(--text-muted)]">
                         {r.puntosRequeridos} pts · {r.tipoRecompensa}
                       </p>
                     </div>
-                    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${r.estaActivo ? "bg-emerald-100 text-emerald-900" : "bg-zinc-100 text-zinc-700"}`}>
+                    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${r.estaActivo ? "bg-[var(--hover)]/15 text-[var(--hover)]" : "bg-[var(--background)] text-[var(--foreground)]"}`}>
                       {r.estaActivo ? "Activa" : "Pausada"}
                     </span>
                   </div>
 
                   <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-2xl bg-white px-4 py-3">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Puntos requeridos</p>
-                      <p className="mt-2 text-sm font-semibold text-zinc-900">{r.puntosRequeridos} pts</p>
+                    <div className="rounded-2xl bg-[var(--background-secondary)] px-4 py-3">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">Puntos requeridos</p>
+                      <p className="mt-2 text-sm font-semibold text-[var(--foreground)]">{r.puntosRequeridos} pts</p>
                     </div>
-                    <div className="rounded-2xl bg-white px-4 py-3">
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Nota</p>
-                      <p className="mt-2 text-sm text-zinc-700">{r.descripcion || "—"}</p>
+                    <div className="rounded-2xl bg-[var(--background-secondary)] px-4 py-3">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">Nota</p>
+                      <p className="mt-2 text-sm text-[var(--foreground)]">{r.descripcion || "—"}</p>
                     </div>
                   </div>
                 </article>
@@ -431,16 +431,16 @@ export function LoyaltyManagement() {
         </div>
 
         <aside className="space-y-4">
-          <div className="rounded-3xl border border-zinc-200 bg-white p-5 shadow-sm">
+          <div className="rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-5 shadow-sm">
             <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-zinc-100 p-3">
-                <Gift size={18} className="text-zinc-700" />
+              <div className="rounded-2xl bg-[var(--background)] p-3">
+                <Gift size={18} className="text-[var(--foreground)]" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-zinc-900">
+                <p className="text-sm font-semibold text-[var(--foreground)]">
                   {selectedId ? "Editar beneficio" : "Crear beneficio"}
                 </p>
-                <p className="text-sm text-zinc-600">Define que puede canjear el cliente con sus puntos.</p>
+                <p className="text-sm text-[var(--text-muted)]">Define que puede canjear el cliente con sus puntos.</p>
               </div>
             </div>
 
@@ -497,7 +497,7 @@ export function LoyaltyManagement() {
                 type="button"
                 onClick={() => setIsConfirmOpen(true)}
                 disabled={!draft.nombre || draft.puntos_requeridos < 1}
-                className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-full bg-[var(--button-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--button-primary-foreground)] transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <PencilLine size={16} />
                 {selectedId ? "Guardar beneficio" : "Crear beneficio"}
@@ -506,7 +506,7 @@ export function LoyaltyManagement() {
                 type="button"
                 onClick={() => setIsDeleteConfirmOpen(true)}
                 disabled={!selectedRecompensa}
-                className="inline-flex items-center gap-2 rounded-full border border-red-200 px-5 py-2.5 text-sm font-semibold text-red-700 transition enabled:hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-full border border-[var(--destructive-border)] px-5 py-2.5 text-sm font-semibold text-[var(--destructive)] transition enabled:hover:bg-[var(--destructive-hover)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Trash2 size={16} />
                 Eliminar
@@ -550,7 +550,7 @@ export function LoyaltyManagement() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="space-y-2">
-      <span className="text-sm font-medium text-zinc-700">{label}</span>
+      <span className="text-sm font-medium text-[var(--foreground)]">{label}</span>
       {children}
     </label>
   );
