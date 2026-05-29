@@ -43,12 +43,12 @@ export function ProductCard({
       className={`group relative flex flex-col justify-between p-8 transition hover:-translate-y-px ${
         featured
           ? "bg-neutral-900 text-white"
-          : "bg-[var(--tenant-surface)]"
+          : "bg-[var(--background-secondary)]"
       }`}
     >
       <span
         className={`pointer-events-none absolute bottom-6 right-6 font-black leading-none ${
-          featured ? "text-white/5" : "text-black/5"
+          featured ? "text-white/5" : "text-[var(--foreground)]/5"
         }`}
         style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "80px" }}
       >
@@ -57,8 +57,8 @@ export function ProductCard({
 
       <div className="space-y-4">
         <p
-          className={`text-[9px] font-semibold uppercase tracking-[0.22em] ${
-            featured ? "text-[var(--tenant-primary)]" : "text-[var(--tenant-muted)]"
+          className={`text-[10px] font-semibold uppercase tracking-[0.22em] ${
+            featured ? "text-[var(--tenant-primary)]" : "text-[var(--text-muted)]"
           }`}
         >
           {categoriaNombre}
@@ -74,7 +74,7 @@ export function ProductCard({
 
         <h2
           className={`font-black uppercase tracking-tight ${
-            featured ? "text-white" : "text-neutral-900"
+            featured ? "text-white" : "text-[var(--foreground)]"
           }`}
           style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "clamp(22px,3vw,30px)" }}
         >
@@ -83,7 +83,7 @@ export function ProductCard({
 
         <p
           className={`text-sm font-light leading-relaxed ${
-            featured ? "text-white/55" : "text-[var(--tenant-muted)]"
+            featured ? "text-white/55" : "text-[var(--text-muted)]"
           }`}
         >
           {descripcion}
@@ -102,8 +102,8 @@ export function ProductCard({
           </span>
           {puntos > 0 && (
             <p
-              className={`mt-1 text-[9px] font-semibold uppercase tracking-widest ${
-                featured ? "text-white/40" : "text-[var(--tenant-muted)]"
+              className={`mt-1 text-[10px] font-semibold uppercase tracking-widest ${
+                featured ? "text-white/40" : "text-[var(--text-muted)]"
               }`}
             >
               +{puntos} pts
@@ -113,7 +113,7 @@ export function ProductCard({
 
         <div className="flex items-center gap-2">
           {cantidadEnCarrito > 0 && (
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black/10 text-[10px] font-bold">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--foreground)]/10 text-[10px] font-bold">
               {cantidadEnCarrito}
             </span>
           )}
@@ -124,8 +124,8 @@ export function ProductCard({
               added
                 ? "bg-emerald-500 text-white"
                 : featured
-                  ? "bg-white text-black hover:bg-neutral-200"
-                  : "bg-neutral-900 text-white hover:bg-neutral-700"
+                  ? "bg-[var(--foreground)] text-[var(--background)] hover:bg-[var(--foreground)]/80"
+                  : "bg-[var(--foreground)] text-[var(--background)] hover:bg-[var(--foreground)]/75"
             }`}
           >
             {added ? "✓ Agregado" : "Agregar"}

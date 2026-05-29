@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { CalendarClock, Filter, Mail, Phone, Plus, Search, Star, UserRound, Loader2, AlertCircle } from "lucide-react";
+import { ArrowLeft, Filter, Loader2, PencilLine, Plus, Search, ShieldCheck, UserCog, UserRound, Users, X, AlertCircle } from "lucide-react";
 import { ConfirmationModal } from "@/components/dashboard/confirmation-modal";
+import { Pagination } from "@/components/dashboard/pagination";
 import { EmployeesService } from "@/services/employees.service";
 import type { Employee, EmployeeDraft, EmployeeFilter } from "@/types/employee";
 
@@ -19,18 +20,31 @@ const emptyDraft: EmployeeDraft = {
 };
 
 const inputClassName =
-  "w-full rounded-2xl border border-zinc-200 px-4 py-3 text-sm outline-none transition placeholder:text-zinc-400 focus:border-zinc-900";
+  "w-full rounded-2xl border border-[var(--border)] bg-[var(--background-secondary)] text-[var(--foreground)] px-4 py-3 text-sm outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--foreground)]";
 
-export function EmployeesManagement() {
+type Props = {
+  kpiActivos: number;
+  kpiAdmins: number;
+  kpiEmpleados: number;
+};
+
+export function EmployeesManagement({ kpiActivos, kpiAdmins, kpiEmpleados }: Props) {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<EmployeeFilter>("Todos");
+  const [roleFilter, setRoleFilter] = useState<"Todos" | "admin" | "empleado">("Todos");
+  const [mode, setMode] = useState<"list" | "create" | "edit">("list");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [draft, setDraft] = useState<EmployeeDraft>(emptyDraft);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const pageSize = 10;
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     async function load() {
@@ -55,44 +69,86 @@ export function EmployeesManagement() {
         employee.specialties.some((specialty) => specialty.toLowerCase().includes(query.toLowerCase()));
       const matchesStatus =
         statusFilter === "Todos" || employee.status === statusFilter;
-      return matchesQuery && matchesStatus;
+      const matchesRole =
+        roleFilter === "Todos" || employee.role === roleFilter;
+      return matchesQuery && matchesStatus && matchesRole;
     });
-  }, [employees, query, statusFilter]);
+  }, [employees, query, statusFilter, roleFilter]);
 
-  const handleSelect = (employee: Employee) => {
+  useEffect(() => { setPage(1); }, [query, statusFilter, roleFilter]);
+
+  const totalPages = Math.ceil(filteredEmployees.length / pageSize);
+  const paginatedEmployees = filteredEmployees.slice((page - 1) * pageSize, page * pageSize);
+
+  const selectedEmployee = employees.find((employee) => employee.id === selectedId);
+
+  const handleEdit = (employee: Employee) => {
     setSelectedId(employee.id);
     setDraft(toDraft(employee));
+    setPassword("");
+    setConfirmPassword("");
+    setPasswordError("");
+    setMode("edit");
+  };
+
+  const handleCreate = () => {
+    setSelectedId(null);
+    setDraft(emptyDraft);
+    setPassword("");
+    setConfirmPassword("");
+    setPasswordError("");
+    setMode("create");
+  };
+
+  const handleBack = () => {
+    setMode("list");
+    setSelectedId(null);
+    setDraft(emptyDraft);
   };
 
   const handleSave = async () => {
     if (!draft.nombres || !draft.apellidos) return;
 
+    if (password && password !== confirmPassword) {
+      setPasswordError("Las claves no coinciden.");
+      return;
+    }
+    if (mode === "create" && (!password || password.length < 6)) {
+      setPasswordError("La clave debe tener al menos 6 caracteres.");
+      return;
+    }
+    setPasswordError("");
+
     setSaving(true);
     try {
-      if (!selectedId) {
+      if (mode === "create") {
         const created = await EmployeesService.create({
           nombres: draft.nombres,
           apellidos: draft.apellidos,
           correo_electronico: draft.correo_electronico,
           telefono: draft.telefono,
           esta_activo: draft.esta_activo,
+          clave_hash: password,
         });
         setEmployees((current) => [created, ...current]);
-        setSelectedId(created.id);
-        setDraft(toDraft(created));
-      } else {
+      } else if (mode === "edit" && selectedId) {
         const updated = await EmployeesService.update(selectedId, {
           nombres: draft.nombres,
           apellidos: draft.apellidos,
           correo_electronico: draft.correo_electronico,
           telefono: draft.telefono,
           esta_activo: draft.esta_activo,
+          ...(password ? { clave_hash: password } : {}),
         });
         setEmployees((current) =>
           current.map((emp) => (emp.id === selectedId ? updated : emp)),
         );
-        setDraft(toDraft(updated));
       }
+      setMode("list");
+      setSelectedId(null);
+      setDraft(emptyDraft);
+      setPassword("");
+      setConfirmPassword("");
     } catch (err) {
       alert(err instanceof Error ? err.message : "Error al guardar");
     } finally {
@@ -101,12 +157,10 @@ export function EmployeesManagement() {
     }
   };
 
-  const selectedEmployee = employees.find((employee) => employee.id === selectedId);
-
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="animate-spin text-zinc-400" size={32} />
+        <Loader2 className="animate-spin text-[var(--text-muted)]" size={32} />
       </div>
     );
   }
@@ -114,12 +168,12 @@ export function EmployeesManagement() {
   if (error) {
     return (
       <div className="flex flex-col items-center gap-3 py-20 text-center">
-        <AlertCircle className="text-red-400" size={32} />
-        <p className="text-sm text-zinc-600">{error}</p>
+        <AlertCircle className="text-[var(--destructive)]" size={32} />
+        <p className="text-sm text-[var(--text-muted)]">{error}</p>
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="rounded-full bg-zinc-900 px-4 py-2 text-sm font-semibold text-white"
+          className="rounded-full bg-[var(--button-primary)] px-4 py-2 text-sm font-semibold text-[var(--button-primary-foreground)] transition hover:opacity-90"
         >
           Reintentar
         </button>
@@ -128,40 +182,90 @@ export function EmployeesManagement() {
   }
 
   return (
-    <div className="grid gap-6 xl:grid-cols-[1.2fr_0.95fr]">
-      <div className="space-y-4">
-        <div className="rounded-3xl border border-zinc-200 bg-gradient-to-br from-white to-amber-50 p-5 shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-sm font-semibold text-zinc-900">Tu equipo</p>
-              <p className="mt-1 text-sm text-zinc-600">
-                {employees.length} empleado{employees.length !== 1 ? "s" : ""} registrado{employees.length !== 1 ? "s" : ""}.
-              </p>
+    <>
+      {/* KPIs — solo visibles en modo listado */}
+      {mode === "list" && (
+        <div className="grid gap-3 sm:grid-cols-3">
+          <article className="rounded-2xl border border-[var(--hover)]/20 p-4" style={{ background: "color-mix(in srgb, var(--hover) 6%, var(--background-secondary))" }}>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">Cuentas activas</p>
+            <div className="mt-2 flex items-center gap-2">
+              <ShieldCheck size={20} style={{ color: "var(--hover)" }} />
+              <p className="text-xl font-bold text-[var(--foreground)]">{kpiActivos}</p>
             </div>
+          </article>
+          <article className="rounded-2xl border border-[var(--hover)]/20 p-4" style={{ background: "color-mix(in srgb, var(--hover) 6%, var(--background-secondary))" }}>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">Administradores</p>
+            <div className="mt-2 flex items-center gap-2">
+              <UserCog size={20} style={{ color: "var(--hover)" }} />
+              <p className="text-xl font-bold text-[var(--foreground)]">{kpiAdmins}</p>
+            </div>
+          </article>
+          <article className="rounded-2xl border border-[var(--hover)]/20 p-4" style={{ background: "color-mix(in srgb, var(--hover) 6%, var(--background-secondary))" }}>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">Empleados</p>
+            <div className="mt-2 flex items-center gap-2">
+              <Users size={20} style={{ color: "var(--hover)" }} />
+              <p className="text-xl font-bold text-[var(--foreground)]">{kpiEmpleados}</p>
+            </div>
+          </article>
+        </div>
+      )}
+
+      {/* Barra de busqueda y filtros — siempre visible */}
+      <div className="rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-5 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-[var(--foreground)]">Tu equipo</p>
+            <p className="mt-1 text-sm text-[var(--text-muted)]">
+              {employees.length} empleado{employees.length !== 1 ? "s" : ""} registrado{employees.length !== 1 ? "s" : ""}
+            </p>
+          </div>
+          {mode === "list" ? (
             <button
               type="button"
-              onClick={() => {
-                setSelectedId(null);
-                setDraft(emptyDraft);
-              }}
-              className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-zinc-800"
+              onClick={handleCreate}
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--button-primary)] px-4 py-2 text-sm font-semibold text-[var(--button-primary-foreground)] transition hover:opacity-90"
             >
               <Plus size={16} />
               Nuevo empleado
             </button>
-          </div>
-          <div className="mt-4 grid gap-3 md:grid-cols-[1fr_220px]">
-            <label className="flex items-center gap-3 rounded-2xl border border-zinc-200 px-4 py-3">
-              <Search size={16} className="text-zinc-400" />
+          ) : (
+            <button
+              type="button"
+              onClick={handleBack}
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-4 py-2 text-sm font-semibold text-[var(--foreground)] transition hover:bg-[var(--background)]"
+            >
+              <ArrowLeft size={16} />
+              Volver al listado
+            </button>
+          )}
+        </div>
+
+        {mode === "list" && (
+          <>
+            <div className="mt-4 grid gap-3 md:grid-cols-[1fr_180px_180px]">
+            <label className="flex items-center gap-3 rounded-2xl border border-[var(--border)] px-4 py-3">
+              <Search size={16} className="text-[var(--text-muted)]" />
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Buscar por nombre, puesto o especialidad"
-                className="w-full bg-transparent text-sm outline-none placeholder:text-zinc-400"
+                className="w-full bg-transparent text-sm outline-none placeholder:text-[var(--text-muted)]"
               />
             </label>
-            <label className="flex items-center gap-3 rounded-2xl border border-zinc-200 px-4 py-3">
-              <Filter size={16} className="text-zinc-400" />
+            <label className="flex items-center gap-3 rounded-2xl border border-[var(--border)] px-4 py-3">
+              <Filter size={16} className="text-[var(--text-muted)]" />
+              <select
+                value={roleFilter}
+                onChange={(event) => setRoleFilter(event.target.value as "Todos" | "admin" | "empleado")}
+                className="w-full bg-transparent text-sm outline-none"
+              >
+                <option value="Todos">Todos los roles</option>
+                <option value="admin">Admin</option>
+                <option value="empleado">Empleado</option>
+              </select>
+            </label>
+            <label className="flex items-center gap-3 rounded-2xl border border-[var(--border)] px-4 py-3">
+              <Filter size={16} className="text-[var(--text-muted)]" />
               <select
                 value={statusFilter}
                 onChange={(event) => setStatusFilter(event.target.value as EmployeeFilter)}
@@ -172,88 +276,115 @@ export function EmployeesManagement() {
                 <option>Inactivo</option>
               </select>
             </label>
-          </div>
         </div>
-        {filteredEmployees.length === 0 ? (
-          <p className="py-10 text-center text-sm text-zinc-500">
-            No se encontraron empleados.
-          </p>
-        ) : (
-          <div className="grid gap-4 md:grid-cols-2">
-            {filteredEmployees.map((employee) => (
+          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+        </>
+      )}
+      </div>
+
+      {/* Listado */}
+      {mode === "list" && (
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+          {paginatedEmployees.length === 0 ? (
+            <div className="col-span-full flex flex-col items-center gap-3 py-16">
+              <UserRound size={32} className="text-[var(--text-muted)]" />
+              <p className="text-sm text-[var(--text-muted)]">
+                {query || statusFilter !== "Todos" || roleFilter !== "Todos"
+                  ? "No se encontraron empleados con esos filtros."
+                  : "No hay empleados registrados. Crea el primero."}
+              </p>
+            </div>
+          ) : (
+            paginatedEmployees.map((employee) => (
               <article
                 key={employee.id}
-                className={`rounded-3xl border bg-white p-5 shadow-sm transition ${
-                  selectedId === employee.id
-                    ? "border-amber-300 bg-gradient-to-br from-amber-50 to-orange-50 shadow-md"
-                    : "border-zinc-200 hover:-translate-y-1 hover:shadow-md"
-                }`}
+                className="rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-lg font-semibold text-zinc-900">{employee.name}</p>
-                    <p className="mt-1 text-sm text-zinc-600">{employee.role}</p>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[var(--background)] text-[var(--foreground)]">
+                    <UserRound size={20} />
                   </div>
                   <span
                     className={`rounded-full px-3 py-1 text-xs font-semibold ${
                       employee.status === "Activo"
-                        ? "bg-emerald-100 text-emerald-900"
-                        : "bg-rose-100 text-rose-900"
+                        ? "bg-[var(--hover)]/15 text-[var(--hover)]"
+                        : "bg-[var(--warning)]/15 text-[var(--warning)]"
                     }`}
                   >
                     {employee.status}
                   </span>
                 </div>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {employee.specialties.map((specialty) => (
-                    <span
-                      key={specialty}
-                      className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-zinc-700"
-                    >
-                      {specialty}
+
+                <div className="mt-3">
+                  <div className="flex items-center gap-2">
+                    <p className="text-base font-semibold text-[var(--foreground)]">{employee.name}</p>
+                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase ${
+                      employee.role === "admin"
+                        ? "bg-[var(--foreground)]/10 text-[var(--foreground)]"
+                        : "bg-[var(--hover)]/10 text-[var(--hover)]"
+                    }`}>
+                      {employee.role}
                     </span>
-                  ))}
+                  </div>
                 </div>
-                <div className="mt-4 space-y-2 text-sm text-zinc-600">
-                  <p className="flex items-center gap-2">
-                    <CalendarClock size={15} />
-                    {employee.weeklyLoad || "Por calcular"}
-                  </p>
-                  <p className="flex items-center gap-2">
-                    <Star size={15} />
-                    Comision {employee.commission || "Por definir"}
-                  </p>
-                </div>
-                <div className="mt-5 flex flex-wrap gap-3">
+
+                {employee.specialties.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {employee.specialties.map((specialty) => (
+                      <span
+                        key={specialty}
+                        className="rounded-full bg-[var(--background)] px-2.5 py-0.5 text-xs font-medium text-[var(--text-muted)]"
+                      >
+                        {specialty}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                <div className="mt-4 flex items-center gap-2 border-t border-[var(--border)] pt-4">
                   <button
                     type="button"
-                    onClick={() => handleSelect(employee)}
-                    className="rounded-full border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-900 transition hover:bg-zinc-100"
+                    onClick={() => handleEdit(employee)}
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[var(--border)] py-2 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--background)]"
                   >
-                    Editar vista
+                    <PencilLine size={14} />
+                    Editar
                   </button>
                   <Link
                     href={`/admin/empleados/${employee.id}`}
-                    className="rounded-full px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-100"
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[var(--border)] py-2 text-sm font-medium text-[var(--text-muted)] transition hover:bg-[var(--background)] hover:text-[var(--foreground)]"
                   >
-                    Ver perfil
+                    <ArrowLeft size={14} className="rotate-180" />
+                    Perfil
                   </Link>
                 </div>
               </article>
-            ))}
+            ))
+          )}
+        </div>
+      )}
+
+      {/* Formulario crear / editar */}
+      {(mode === "create" || mode === "edit") && (
+        <div className="rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] p-6 shadow-sm">
+          <div className="mb-6 flex items-center gap-3">
+            <div className="rounded-2xl bg-[var(--background)] p-3">
+              <UserRound size={20} className="text-[var(--foreground)]" />
+            </div>
+            <div>
+              <p className="text-lg font-semibold text-[var(--foreground)]">
+                {mode === "create" ? "Nuevo empleado" : "Editar empleado"}
+              </p>
+              <p className="text-sm text-[var(--text-muted)]">
+                {mode === "create"
+                  ? "Completa los datos para agregar una persona al equipo."
+                  : `Editando a ${selectedEmployee?.name ?? ""}`}
+              </p>
+            </div>
           </div>
-        )}
-      </div>
-      <aside className="space-y-4">
-        <div className="rounded-3xl border border-zinc-200 bg-gradient-to-br from-white to-sky-50 p-5 shadow-sm">
-          <p className="text-sm font-semibold text-zinc-900">
-            {selectedId ? "Editar empleado" : "Nuevo empleado"}
-          </p>
-          <p className="mt-1 text-sm text-zinc-600">
-            Completa los datos basicos del equipo.
-          </p>
-          <div className="mt-4 grid gap-3">
-            <Field label="Nombres">
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <Field label="Nombres" required>
               <input
                 value={draft.nombres}
                 onChange={(event) =>
@@ -263,7 +394,7 @@ export function EmployeesManagement() {
                 placeholder="Nombres"
               />
             </Field>
-            <Field label="Apellidos">
+            <Field label="Apellidos" required>
               <input
                 value={draft.apellidos}
                 onChange={(event) =>
@@ -273,33 +404,16 @@ export function EmployeesManagement() {
                 placeholder="Apellidos"
               />
             </Field>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <Field label="Telefono">
-                <input
-                  value={draft.telefono}
-                  onChange={(event) =>
-                    setDraft((current) => ({ ...current, telefono: event.target.value }))
-                  }
-                  className={inputClassName}
-                  placeholder="999 999 999"
-                />
-              </Field>
-              <Field label="Estado">
-                <select
-                  value={draft.esta_activo ? "Activo" : "Inactivo"}
-                  onChange={(event) =>
-                    setDraft((current) => ({
-                      ...current,
-                      esta_activo: event.target.value === "Activo",
-                    }))
-                  }
-                  className={inputClassName}
-                >
-                  <option>Activo</option>
-                  <option>Inactivo</option>
-                </select>
-              </Field>
-            </div>
+            <Field label="Telefono">
+              <input
+                value={draft.telefono}
+                onChange={(event) =>
+                  setDraft((current) => ({ ...current, telefono: event.target.value }))
+                }
+                className={inputClassName}
+                placeholder="999 999 999"
+              />
+            </Field>
             <Field label="Email">
               <input
                 value={draft.correo_electronico}
@@ -310,80 +424,93 @@ export function EmployeesManagement() {
                 placeholder="correo@negocio.com"
               />
             </Field>
-            <Field label="Especialidades">
-              <input
-                value={draft.specialties}
+            <Field label="Estado">
+              <select
+                value={draft.esta_activo ? "Activo" : "Inactivo"}
                 onChange={(event) =>
-                  setDraft((current) => ({ ...current, specialties: event.target.value }))
+                  setDraft((current) => ({
+                    ...current,
+                    esta_activo: event.target.value === "Activo",
+                  }))
                 }
                 className={inputClassName}
-                placeholder="Fade, Barba, Kids"
+              >
+                <option>Activo</option>
+                <option>Inactivo</option>
+              </select>
+            </Field>
+          </div>
+
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <Field label={`Clave ${mode === "edit" ? "(dejar en blanco para no cambiar)" : ""}`}>
+              <input
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                className={inputClassName}
+                placeholder={mode === "create" ? "Clave de acceso" : "Nueva clave (opcional)"}
+              />
+            </Field>
+            <Field label="Confirmar clave">
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+                className={inputClassName}
+                placeholder={mode === "create" ? "Repetir clave de acceso" : "Repetir nueva clave"}
               />
             </Field>
           </div>
-          <div className="mt-5 flex flex-wrap gap-3">
+
+          {passwordError && (
+            <p className="mt-3 text-sm text-[var(--destructive)]">{passwordError}</p>
+          )}
+
+          <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-[var(--border)] pt-6">
             <button
               type="button"
               onClick={() => setIsConfirmOpen(true)}
               disabled={saving}
-              className="inline-flex items-center gap-2 rounded-full bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800 disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--button-primary)] px-5 py-2.5 text-sm font-semibold text-[var(--button-primary-foreground)] transition hover:opacity-90 disabled:opacity-50"
             >
               {saving && <Loader2 size={16} className="animate-spin" />}
-              {selectedId ? "Guardar cambios" : "Crear empleado"}
+              {mode === "create" ? "Crear empleado" : "Guardar cambios"}
             </button>
             <button
               type="button"
-              onClick={() => {
-                if (selectedEmployee) {
-                  setDraft(toDraft(selectedEmployee));
-                  return;
-                }
-                setDraft(emptyDraft);
-              }}
-              className="rounded-full border border-zinc-200 px-5 py-2.5 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-100"
+              onClick={handleBack}
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-5 py-2.5 text-sm font-semibold text-[var(--foreground)] transition hover:bg-[var(--background)]"
             >
-              Restablecer
+              <X size={16} />
+              Cancelar
             </button>
           </div>
         </div>
-        <div className="rounded-3xl border border-zinc-200 bg-gradient-to-br from-white to-zinc-50 p-5 shadow-sm">
-          <p className="text-sm font-semibold text-zinc-900">Datos que se guardaran</p>
-          <div className="mt-4 space-y-3 text-sm text-zinc-600">
-            <p className="flex items-center gap-2">
-              <UserRound size={15} />
-              Perfil base, rol y estado
-            </p>
-            <p className="flex items-center gap-2">
-              <Mail size={15} />
-              Correo para acceso y notificaciones
-            </p>
-            <p className="flex items-center gap-2">
-              <Phone size={15} />
-              Telefono para contacto interno
-            </p>
-          </div>
-        </div>
-      </aside>
+      )}
+
       <ConfirmationModal
         open={isConfirmOpen}
-        title={selectedId ? "Confirmar cambios" : "Confirmar nuevo empleado"}
+        title={mode === "create" ? "Confirmar nuevo empleado" : "Confirmar cambios"}
         description={
-          selectedId
-            ? "Se guardaran los cambios hechos en este empleado."
-            : "Se creara un nuevo empleado con los datos que llenaste."
+          mode === "create"
+            ? "Se creara un nuevo empleado con los datos que llenaste."
+            : "Se guardaran los cambios hechos en este empleado."
         }
-        confirmLabel={selectedId ? "Si, guardar" : "Si, crear"}
+        confirmLabel={mode === "create" ? "Si, crear" : "Si, guardar"}
         onClose={() => setIsConfirmOpen(false)}
         onConfirm={handleSave}
       />
-    </div>
+    </>
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
     <label className="space-y-2">
-      <span className="text-sm font-medium text-zinc-700">{label}</span>
+      <span className="text-sm font-medium text-[var(--foreground)]">
+        {label}
+        {required && <span className="ml-1 text-[var(--destructive)]">*</span>}
+      </span>
       {children}
     </label>
   );

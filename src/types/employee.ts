@@ -25,6 +25,8 @@ export type Employee = {
   weeklyLoad: string;
   commission: string;
   auth_user_id: string | null;
+  creadoEn: string;
+  actualizadoEn: string;
 };
 
 export type EmployeeDraft = {

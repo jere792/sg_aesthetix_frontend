@@ -1,11 +1,12 @@
 import { BusinessManagement } from "@/components/dashboard/business-management";
 import { ModulePageShell } from "@/components/dashboard/module-page-shell";
 
-export default function EmpresaPage() {
+export default function ConfiguracionEmpresaPage() {
   return (
     <ModulePageShell
-      title="Datos del negocio"
-      description="Cambia el nombre, estado y datos principales de tu negocio."
+      breadcrumb={[{ label: "Administracion", href: "/admin" }, { label: "Configuracion" }]}
+      title="Configuracion"
+      description="Administra los datos de tu negocio, nombre, enlace y estado."
     >
       <BusinessManagement />
     </ModulePageShell>

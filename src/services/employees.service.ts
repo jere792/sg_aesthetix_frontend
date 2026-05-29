@@ -15,6 +15,8 @@ function mapRowToEmployee(row: EmployeeRow, specialties: string[]): Employee {
     weeklyLoad: "",
     commission: "",
     auth_user_id: row.auth_user_id,
+    creadoEn: row.creado_en ?? "",
+    actualizadoEn: row.actualizado_en ?? "",
   };
 }
 
@@ -34,7 +36,6 @@ export const EmployeesService = {
     const { data: rows, error } = await supabase
       .from("usuarios")
       .select("*")
-      .eq("rol", "empleado")
       .order("creado_en", { ascending: false });
     if (error) throw new Error(error.message);
     if (!rows) return [];
@@ -79,6 +80,7 @@ export const EmployeesService = {
     correo_electronico: string;
     telefono: string;
     esta_activo: boolean;
+    clave_hash?: string;
     servicio_ids?: string[];
   }): Promise<Employee> {
     const supabase = createClient();
@@ -89,7 +91,7 @@ export const EmployeesService = {
         apellidos: data.apellidos,
         rol: "empleado",
         correo_electronico: data.correo_electronico,
-        clave_hash: "",
+        clave_hash: data.clave_hash || "",
         telefono: data.telefono || null,
         esta_activo: data.esta_activo,
       })
@@ -117,6 +119,7 @@ export const EmployeesService = {
       correo_electronico?: string;
       telefono?: string;
       esta_activo?: boolean;
+      clave_hash?: string;
       servicio_ids?: string[];
     },
   ): Promise<Employee> {
@@ -127,6 +130,7 @@ export const EmployeesService = {
     if (data.correo_electronico !== undefined) updateData.correo_electronico = data.correo_electronico;
     if (data.telefono !== undefined) updateData.telefono = data.telefono || null;
     if (data.esta_activo !== undefined) updateData.esta_activo = data.esta_activo;
+    if (data.clave_hash !== undefined) updateData.clave_hash = data.clave_hash;
     const { error } = await supabase.from("usuarios").update(updateData).eq("id", id);
     if (error) throw new Error(error.message);
     if (data.servicio_ids !== undefined) {

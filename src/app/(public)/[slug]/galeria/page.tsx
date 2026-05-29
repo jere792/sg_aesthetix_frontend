@@ -16,16 +16,16 @@ export default async function GaleriaPage({ params }: GaleriaPageProps) {
     .order("orden", { ascending: true });
 
   return (
-    <section className="space-y-10">
+    <section className="space-y-10 pt-8">
       {/* Header */}
       <div>
-        <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[var(--tenant-muted)]">
+        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--text-muted)]">
           Portfolio
         </p>
-        <h1 className="mt-2 text-4xl font-black uppercase tracking-tight sm:text-5xl">
+        <h1 className="mt-2 text-5xl font-black uppercase tracking-tight sm:text-6xl">
           Galería
         </h1>
-        <p className="mt-3 max-w-md text-sm font-light leading-relaxed text-[var(--tenant-muted)]">
+        <p className="mt-3 max-w-md text-lg font-light leading-relaxed text-[var(--text-muted)]">
           Cada corte es una firma. Explorá nuestro trabajo y elegí tu estilo.
         </p>
       </div>
@@ -35,7 +35,7 @@ export default async function GaleriaPage({ params }: GaleriaPageProps) {
         {(photos ?? []).map((photo, index) => (
           <article
             key={photo.id}
-            className="group relative aspect-square overflow-hidden bg-neutral-900"
+            className="group relative aspect-square overflow-hidden bg-[var(--background)]"
           >
             <img
               src={photo.imagen_url}
@@ -59,14 +59,14 @@ export default async function GaleriaPage({ params }: GaleriaPageProps) {
       </div>
 
       {/* Footer */}
-      <div className="flex items-center gap-6 pt-2">
+      <div className="flex items-center gap-6 pt-8 pb-12">
         <Link
           href={`/${slug}`}
-          className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--tenant-muted)] transition hover:text-[var(--tenant-primary)]"
+          className="inline-flex items-center gap-2 border border-[var(--border)] px-5 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-[var(--text-muted)] transition hover:border-[var(--hover)] hover:text-[var(--hover)]"
         >
           ← Volver al inicio
         </Link>
-        <span className="text-[10px] uppercase tracking-widest text-[var(--tenant-muted)]/40">
+        <span className="text-[10px] uppercase tracking-widest text-[var(--text-muted)]/40">
           {photos?.length ?? 0} trabajos
         </span>
       </div>

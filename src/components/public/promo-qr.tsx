@@ -29,7 +29,7 @@ export function PromoQR({ slug, size = 200 }: PromoQRProps) {
       <div className="border border-black/10 bg-white p-3">
         <QRCodeSVG value={url} size={size - 24} />
       </div>
-      <p className="text-[9px] font-semibold uppercase tracking-widest text-neutral-400">
+      <p className="text-[10px] font-semibold uppercase tracking-widest text-neutral-400">
         Escanea para recibir una recompensa
       </p>
     </div>

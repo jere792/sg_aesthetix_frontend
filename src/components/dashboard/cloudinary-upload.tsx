@@ -93,7 +93,7 @@ export function CloudinaryUpload({ cloudName, uploadPreset, onUpload, disabled }
       type="button"
       onClick={handleUpload}
       disabled={!scriptLoaded || uploading || disabled}
-      className="inline-flex items-center gap-2 rounded-2xl border border-dashed border-zinc-300 px-4 py-3 text-sm text-zinc-500 transition hover:border-zinc-900 hover:text-zinc-900 disabled:opacity-40"
+      className="inline-flex items-center gap-2 rounded-2xl border border-dashed border-[var(--border)] px-4 py-3 text-sm text-[var(--text-muted)] transition hover:border-[var(--foreground)] hover:text-[var(--foreground)] disabled:opacity-40"
     >
       {uploading ? (
         <Loader2 size={16} className="animate-spin" />

@@ -34,22 +34,18 @@ export default async function PublicLandingLayout({
   const themeVariables: CSSProperties = {
     ["--tenant-primary" as string]: theme.primaryColor,
     ["--tenant-accent" as string]: theme.accentColor,
-    ["--tenant-background" as string]: theme.backgroundColor,
-    ["--tenant-surface" as string]: theme.surfaceColor,
-    ["--tenant-text" as string]: theme.textColor,
-    ["--tenant-muted" as string]: theme.mutedTextColor,
   };
 
   const basePath = `/${tenant.slug}`;
 
   const footer = (
-    <footer className="mt-auto px-6 pb-8 max-w-6xl mx-auto w-full">
+    <footer className="mt-auto px-6 pb-8 max-w-[1400px] mx-auto w-full">
       {/* Tarjeta principal */}
-      <div className="relative bg-white border border-black/8 rounded-3xl px-8 py-10 flex flex-col md:flex-row justify-between items-start gap-8 overflow-visible">
-        <div className="hidden md:block absolute -top-5 -left-6 w-[80px] scale-75 opacity-80">
+      <div className="relative bg-[var(--background-secondary)] border border-transparent/10 rounded-3xl px-8 py-12 flex flex-col md:flex-row justify-between items-start gap-8 overflow-visible">
+        <div className="hidden md:block absolute -top-5 -left-6 w-[80px] scale-75 opacity-80 dark:invert dark:opacity-60">
           <TapeDecor />
         </div>
-        <div className="hidden md:block absolute -top-5 -right-6 rotate-90 w-[80px] scale-75 opacity-80">
+        <div className="hidden md:block absolute -top-5 -right-6 rotate-90 w-[80px] scale-75 opacity-80 dark:invert dark:opacity-60">
           <TapeDecor />
         </div>
 
@@ -57,12 +53,12 @@ export default async function PublicLandingLayout({
         <div className="flex flex-col gap-3 max-w-xs">
           <Link href={basePath} className="flex items-center gap-3">
             <img
-              src="https://res.cloudinary.com/dxuk9bogw/image/upload/v1777198980/Dise%C3%B1o_sin_t%C3%ADtulo_3_o2ipsz.png"
+              src="https://res.cloudinary.com/dp1vgjhsq/image/upload/v1779981307/LOGOTIPO_tsrnvl.png"
               alt={theme.brandName}
-              className="h-8 w-auto object-contain"
+              className="h-[80px] w-auto scale-150"
             />
           </Link>
-          <p className="text-xs text-neutral-400 leading-relaxed">
+          <p className="text-sm text-[var(--text-muted)] leading-relaxed">
             Cortes de precisión, ambiente cuidado y reserva online sin
             esperas.
           </p>
@@ -72,37 +68,37 @@ export default async function PublicLandingLayout({
         <div className="flex flex-col sm:flex-row gap-8 md:gap-16">
           {/* Navegar */}
           <div className="flex flex-col gap-3">
-            <h4 className="text-[9px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
               Navegar
             </h4>
-            <div className="flex flex-col gap-2 text-xs text-neutral-500">
+            <div className="flex flex-col gap-2 text-sm text-[var(--text-muted)]">
               <Link
                 href={basePath}
-                className="hover:text-black transition-colors"
+                className="hover:text-[var(--foreground)] transition-colors"
               >
                 Inicio
               </Link>
               <Link
                 href={`${basePath}#servicios`}
-                className="hover:text-black transition-colors"
+                className="hover:text-[var(--foreground)] transition-colors"
               >
                 Servicios
               </Link>
               <Link
                 href={`${basePath}#equipo`}
-                className="hover:text-black transition-colors"
+                className="hover:text-[var(--foreground)] transition-colors"
               >
                 Equipo
               </Link>
               <Link
                 href={`${basePath}/galeria`}
-                className="hover:text-black transition-colors"
+                className="hover:text-[var(--foreground)] transition-colors"
               >
                 Galería
               </Link>
               <Link
                 href={`${basePath}/productos`}
-                className="hover:text-black transition-colors"
+                className="hover:text-[var(--foreground)] transition-colors"
               >
                 Productos
               </Link>
@@ -111,25 +107,25 @@ export default async function PublicLandingLayout({
 
           {/* Reservas */}
           <div className="flex flex-col gap-3">
-            <h4 className="text-[9px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
               Reservas
             </h4>
-            <div className="flex flex-col gap-2 text-xs text-neutral-500">
+            <div className="flex flex-col gap-2 text-sm text-[var(--text-muted)]">
               <Link
                 href={`${basePath}/reservar`}
-                className="hover:text-black transition-colors"
+                className="hover:text-[var(--foreground)] transition-colors"
               >
                 Reservar turno
               </Link>
               <Link
                 href={`${basePath}#reservas`}
-                className="hover:text-black transition-colors"
+                className="hover:text-[var(--foreground)] transition-colors"
               >
                 Horarios disponibles
               </Link>
-              <span className="text-neutral-300 cursor-default">
+              <span className="text-[var(--text-muted)] cursor-default">
                 App móvil{" "}
-                <span className="inline-flex ml-1 py-0.5 px-2 bg-neutral-100 text-[9px] rounded-full -rotate-1">
+                <span className="inline-flex ml-1 py-0.5 px-2 bg-[var(--background)] text-[10px] rounded-full -rotate-1">
                   pronto
                 </span>
               </span>
@@ -138,19 +134,19 @@ export default async function PublicLandingLayout({
 
           {/* Legal */}
           <div className="flex flex-col gap-3">
-            <h4 className="text-[9px] font-semibold uppercase tracking-[0.2em] text-neutral-400">
+            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--text-muted)]">
               Legal
             </h4>
-            <div className="flex flex-col gap-2 text-xs text-neutral-500">
+            <div className="flex flex-col gap-2 text-sm text-[var(--text-muted)]">
               <Link
                 href={`${basePath}/privacidad`}
-                className="hover:text-black transition-colors"
+                className="hover:text-[var(--foreground)] transition-colors"
               >
                 Política de privacidad
               </Link>
               <Link
                 href={`${basePath}/terminos`}
-                className="hover:text-black transition-colors"
+                className="hover:text-[var(--foreground)] transition-colors"
               >
                 Términos de uso
               </Link>
@@ -161,7 +157,7 @@ export default async function PublicLandingLayout({
                 <img
                   src="https://res.cloudinary.com/dxuk9bogw/image/upload/v1776155530/7f85d794-58b5-47d0-850d-d06179563fb2.png"
                   alt="Libro de Reclamaciones"
-                  className="h-12 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity"
+                  className="h-14 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity"
                 />
               </Link>
             </div>
@@ -170,7 +166,7 @@ export default async function PublicLandingLayout({
       </div>
 
 {/* Barra inferior */}
-<div className="mt-4 px-2 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-[10px] tracking-[0.08em] uppercase text-neutral-400">
+<div className="mt-4 px-2 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-[11px] tracking-[0.08em] uppercase text-[var(--text-muted)]">
   <p>
     © {new Date().getFullYear()} {theme.brandName} · Todos los derechos reservados
   </p>
@@ -198,7 +194,7 @@ export default async function PublicLandingLayout({
   return (
     <div
       style={themeVariables}
-      className="relative min-h-screen overflow-x-hidden bg-[var(--tenant-background)] text-[var(--tenant-text)]"
+      className="relative min-h-screen overflow-x-hidden bg-[var(--background)] text-[var(--foreground)]"
     >
       <PublicLayoutShell
         slug={tenant.slug}
