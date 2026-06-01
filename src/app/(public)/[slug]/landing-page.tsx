@@ -760,16 +760,17 @@ export default function LandingPage({
             className="grid gap-[1px] md:grid-cols-2 lg:grid-cols-3"
             style={{ background: "var(--background)" }}
           >
-            {barbers.map((barber, i) => {
-              const isDark = i % 2 !== 0;
+            {barbers.map((barber) => {
               return (
                 <article
                   key={barber.id}
-                  className={`relative flex items-center gap-5 px-7 py-7 transition group ${isDark ? "bg-neutral-900 text-white" : "bg-[var(--background-secondary)]"}`}
+                  className="relative flex items-center gap-5 px-7 py-7 transition group bg-[var(--background-secondary)] border"
+                  style={{ borderColor: "var(--hover)" }}
                 >
                   {/* Avatar con foto o inicial */}
                   <div
-                    className={`flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden text-xl font-black ${isDark ? "bg-neutral-900 text-white" : "bg-[var(--background-secondary)] text-[var(--foreground)]"}`}
+                    className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 text-xl font-black bg-[var(--background-secondary)] text-[var(--foreground)]"
+                    style={{ borderColor: "var(--hover)" }}
                   >
                     {barber.imagenUrl ? (
                       <img
@@ -783,7 +784,7 @@ export default function LandingPage({
                   </div>
                   <div className="min-w-0">
                     <h3
-                      className={`text-sm font-black uppercase tracking-tight truncate ${isDark ? "text-white" : "text-[var(--foreground)]"}`}
+                      className="text-sm font-black uppercase tracking-tight truncate text-[var(--foreground)]"
                     >
                       {barber.nombre}
                     </h3>
@@ -794,8 +795,8 @@ export default function LandingPage({
                             key={s}
                             className="inline-block px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest"
                             style={{
-                              background: isDark ? "color-mix(in srgb, var(--hover) 25%, transparent)" : "color-mix(in srgb, var(--hover) 8.2%, transparent)",
-                              color: isDark ? "var(--hover)" : "var(--hover)",
+                              background: "color-mix(in srgb, var(--hover) 8.2%, transparent)",
+                              color: "var(--hover)",
                             }}
                           >
                             {s}
