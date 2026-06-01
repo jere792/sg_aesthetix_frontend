@@ -7,13 +7,27 @@ type BarberRow = {
   apellidos: string;
   telefono: string | null;
   imagen_url: string | null;
+  instagram: string | null;
+  facebook: string | null;
+  tiktok: string | null;
+};
+
+type LocationRow = {
+  id: string;
+  nombre: string;
+  direccion: string;
+  horario: string;
+  telefono: string;
+  maps_url: string;
+  lat: number;
+  lng: number;
 };
 
 async function fetchBarbers() {
   const supabase = createClient();
   const { data: rows } = await supabase
     .from("usuarios")
-    .select("id, nombres, apellidos, telefono, imagen_url")
+    .select("id, nombres, apellidos, telefono, imagen_url, instagram, facebook, tiktok")
     .eq("esta_activo", true)
     .order("creado_en", { ascending: true });
 
@@ -32,12 +46,33 @@ async function fetchBarbers() {
         id: row.id,
         nombre: `${row.nombres} ${row.apellidos}`,
         specialties,
-        imagenUrl: row.imagen_url,
+        imagenUrl: row.imagen_url ?? null,
+        instagram: row.instagram ?? null,
+        facebook: row.facebook ?? null,
+        tiktok: row.tiktok ?? null,
       };
     }),
   );
 
   return barbers;
+}
+
+async function fetchLocales() {
+  const supabase = createClient();
+  const { data } = await supabase
+    .from("locales")
+    .select("*")
+    .order("orden", { ascending: true });
+  if (!data) return [];
+  return (data as LocationRow[]).map((row) => ({
+    name: row.nombre,
+    address: row.direccion,
+    hours: row.horario,
+    phone: row.telefono,
+    mapsUrl: row.maps_url,
+    lat: row.lat,
+    lng: row.lng,
+  }));
 }
 
 export default async function Page({
@@ -48,7 +83,7 @@ export default async function Page({
   const { slug } = await params;
   const supabase = createClient();
 
-  const [serviciosRes, productosRes, galeriaRes, barbers] = await Promise.all([
+  const [serviciosRes, productosRes, galeriaRes, barbers, locales] = await Promise.all([
     supabase
       .from("servicios")
       .select("id, nombre, descripcion, precio, duracion_minutos")
@@ -69,6 +104,7 @@ export default async function Page({
       .order("orden", { ascending: true })
       .limit(4),
     fetchBarbers(),
+    fetchLocales(),
   ]);
 
   const services = (serviciosRes.data ?? []).map((s) => ({
@@ -101,6 +137,7 @@ export default async function Page({
       products={products}
       galleryItems={galleryItems}
       barbers={barbers}
+      locales={locales}
     />
   );
 }
