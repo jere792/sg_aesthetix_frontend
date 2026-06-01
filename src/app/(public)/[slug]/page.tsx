@@ -1,6 +1,8 @@
 import LandingPage from "./landing-page";
 import { createClient } from "@/lib/supabase/client";
 
+export const dynamic = "force-dynamic";
+
 type BarberRow = {
   id: string;
   nombres: string;

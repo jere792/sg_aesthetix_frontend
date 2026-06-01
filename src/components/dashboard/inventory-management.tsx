@@ -94,6 +94,7 @@ export function InventoryManagement({ totalProductos, totalActivos, porReponer }
 
   const handleCreate = () => { setSelectedId(null); setDraft(emptyDraft); setMode("create"); };
   const handleEdit = (item: Product) => { setSelectedId(item.id); setDraft(toDraft(item)); setMode("edit"); };
+  const handleDelete = (item: Product) => { setSelectedId(item.id); setIsDeleteOpen(true); };
   const handleBack = () => { setMode("list"); setSelectedId(null); setDraft(emptyDraft); };
 
   async function saveItem() {
@@ -192,7 +193,7 @@ export function InventoryManagement({ totalProductos, totalActivos, porReponer }
             paginatedInventory.map((item) => {
               const lowStock = item.stock_actual <= item.stock_minimo;
               return (
-                <article key={item.id} className="overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                <article key={item.id} className="flex h-full flex-col overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--background-secondary)] shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                   {item.imagen_url ? (
                     <div className="flex items-center justify-center bg-[var(--background)] px-4 pt-4">
                       <img src={item.imagen_url} alt={item.nombre} className="h-48 w-auto max-w-full rounded-2xl object-contain" />
@@ -200,10 +201,16 @@ export function InventoryManagement({ totalProductos, totalActivos, porReponer }
                   ) : (
                     <div className="flex h-48 w-full items-center justify-center bg-[var(--foreground)]"><Boxes size={32} className="text-[var(--background)]" /></div>
                   )}
-                  <div className="p-5">
+                  <div className="p-5 flex flex-1 flex-col">
                   <div className="flex items-start justify-between gap-3">
                     <div><p className="text-base font-semibold text-[var(--foreground)]">{item.nombre}</p></div>
-                    <span className={`rounded-full px-3 py-1 text-xs font-semibold ${item.esta_activo ? "bg-[var(--hover)]/15 text-[var(--hover)]" : "bg-[var(--background)] text-[var(--text-muted)]"}`}>{item.esta_activo ? "Activo" : "Inactivo"}</span>
+                    <div className="flex flex-wrap gap-1">
+                      <span className={`rounded-full px-3 py-1 text-xs font-semibold ${item.esta_activo ? "bg-[var(--hover)]/15 text-[var(--hover)]" : "bg-[var(--background)] text-[var(--text-muted)]"}`}>{item.esta_activo ? "Activo" : "Inactivo"}</span>
+                    </div>
+                  </div>
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {item.publico && <span className="rounded-full bg-blue-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-blue-500">Público</span>}
+                    {item.destacado && <span className="rounded-full bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-amber-500">Destacado</span>}
                   </div>
                   <div className="mt-3 space-y-1.5 text-sm text-[var(--text-muted)]">
                     <p className="flex items-center gap-2"><Boxes size={14} />Stock: {item.stock_actual} / mín {item.stock_minimo}</p>
@@ -215,9 +222,12 @@ export function InventoryManagement({ totalProductos, totalActivos, porReponer }
                       <AlertTriangle size={14} /> Hace falta reponer
                     </div>
                   )}
-                  <div className="mt-4 flex items-center gap-2 border-t border-[var(--border)] pt-4">
+                  <div className="mt-auto flex items-center gap-2 border-t border-[var(--border)] pt-4">
                     <button type="button" onClick={() => handleEdit(item)} className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[var(--border)] py-2 text-sm font-medium text-[var(--foreground)] transition hover:bg-[var(--background)]">
                       <Plus size={14} className="rotate-45" /> Editar
+                    </button>
+                    <button type="button" onClick={() => handleDelete(item)} className="flex shrink-0 items-center justify-center rounded-xl border border-[var(--destructive-border)] p-2 text-[var(--destructive)] transition hover:bg-[var(--destructive-hover)]">
+                      <Trash2 size={14} />
                     </button>
                   </div>
                   </div>
@@ -240,36 +250,89 @@ export function InventoryManagement({ totalProductos, totalActivos, porReponer }
             </div>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <Field label="Nombre" required><input className={inputClassName} value={draft.nombre} onChange={(e) => setDraft((d) => ({ ...d, nombre: e.target.value }))} /></Field>
-            <Field label="SKU"><input className={inputClassName} value={draft.sku ?? ""} onChange={(e) => setDraft((d) => ({ ...d, sku: e.target.value }))} /></Field>
-            <div className="col-span-full">
-              <Field label="Descripcion"><textarea className={`${inputClassName} min-h-20 resize-none`} value={draft.descripcion ?? ""} onChange={(e) => setDraft((d) => ({ ...d, descripcion: e.target.value }))} /></Field>
-            </div>
-            <div className="col-span-full">
-              <Field label="Imagen">
-                <div className="flex gap-2">
-                  <input className={inputClassName} value={draft.imagen_url ?? ""} onChange={(e) => setDraft((d) => ({ ...d, imagen_url: e.target.value }))} placeholder="https://res.cloudinary.com/..." />
-                  <CloudinaryUpload cloudName={process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!} uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!} onUpload={(url) => setDraft((d) => ({ ...d, imagen_url: url }))} />
+          <div className="grid gap-6 md:grid-cols-[320px_1fr]">
+            {/* IMAGEN - izquierda */}
+            <div className="flex flex-col items-center">
+              <p className="mb-3 text-sm font-medium text-[var(--foreground)]">Foto</p>
+              <div className="flex flex-col items-center gap-3">
+                <div className={`flex aspect-square w-full max-w-[200px] items-center justify-center overflow-hidden rounded-2xl border border-[var(--border)] ${!draft.imagen_url ? "bg-[var(--background)]" : ""}`}>
+                  {draft.imagen_url ? (
+                    <img src={draft.imagen_url} alt="preview" className="h-full w-full object-cover" />
+                  ) : (
+                    <Boxes size={48} className="text-[var(--text-muted)]" />
+                  )}
                 </div>
-              </Field>
-              {draft.imagen_url && <img src={draft.imagen_url} alt="preview" className="mt-2 h-40 w-full rounded-2xl object-cover" />}
+                <CloudinaryUpload cloudName={process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!} uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!} onUpload={(url) => setDraft((d) => ({ ...d, imagen_url: url }))} />
+                {draft.imagen_url && (
+                  <button
+                    type="button"
+                    onClick={() => setDraft((d) => ({ ...d, imagen_url: null }))}
+                    className="text-xs text-[var(--destructive)] underline transition hover:opacity-80"
+                  >
+                    Quitar imagen
+                  </button>
+                )}
+              </div>
             </div>
-            <Field label="Precio costo"><input type="number" className={inputClassName} value={draft.precio_costo ?? 0} onChange={(e) => setDraft((d) => ({ ...d, precio_costo: Number(e.target.value) }))} /></Field>
-            <Field label="Precio venta"><input type="number" className={inputClassName} value={draft.precio_venta} onChange={(e) => setDraft((d) => ({ ...d, precio_venta: Number(e.target.value) }))} /></Field>
-            <Field label="Puntos otorgados"><input type="number" className={inputClassName} value={draft.puntos_otorgados} onChange={(e) => setDraft((d) => ({ ...d, puntos_otorgados: Number(e.target.value) }))} /></Field>
-            <Field label="Estado">
-              <select className={inputClassName} value={draft.esta_activo ? "activo" : "inactivo"} onChange={(e) => setDraft((d) => ({ ...d, esta_activo: e.target.value === "activo" }))}>
-                <option value="activo">Activo</option>
-                <option value="inactivo">Inactivo</option>
-              </select>
-            </Field>
-            <Field label="Visible en tienda">
-              <select className={inputClassName} value={draft.publico ? "si" : "no"} onChange={(e) => setDraft((d) => ({ ...d, publico: e.target.value === "si" }))}>
-                <option value="si">Si - Mostrar en la tienda publica</option>
-                <option value="no">No - Solo panel admin</option>
-              </select>
-            </Field>
+
+            {/* FORMULARIO - derecha */}
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="Nombre" required><input className={inputClassName} value={draft.nombre} onChange={(e) => setDraft((d) => ({ ...d, nombre: e.target.value }))} /></Field>
+              <Field label="SKU"><input className={inputClassName} value={draft.sku ?? ""} onChange={(e) => setDraft((d) => ({ ...d, sku: e.target.value }))} /></Field>
+              <div className="col-span-full">
+                <Field label="Descripcion"><textarea className={`${inputClassName} min-h-20 resize-none`} value={draft.descripcion ?? ""} onChange={(e) => setDraft((d) => ({ ...d, descripcion: e.target.value }))} /></Field>
+              </div>
+              <Field label="Precio costo"><input type="number" className={inputClassName} value={draft.precio_costo ?? 0} onChange={(e) => setDraft((d) => ({ ...d, precio_costo: Number(e.target.value) }))} /></Field>
+              <Field label="Precio venta"><input type="number" className={inputClassName} value={draft.precio_venta} onChange={(e) => setDraft((d) => ({ ...d, precio_venta: Number(e.target.value) }))} /></Field>
+              <Field label="Puntos otorgados"><input type="number" className={inputClassName} value={draft.puntos_otorgados} onChange={(e) => setDraft((d) => ({ ...d, puntos_otorgados: Number(e.target.value) }))} /></Field>
+              <Field label="Stock mínimo"><input type="number" className={inputClassName} value={draft.stock_minimo} onChange={(e) => setDraft((d) => ({ ...d, stock_minimo: Number(e.target.value) }))} /></Field>
+              <div className="col-span-full">
+                <div className="flex items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--background)] px-4 py-3">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">Estado</span>
+                  <div className="flex rounded-xl bg-[var(--background-secondary)] p-0.5">
+                    <button
+                      type="button"
+                      onClick={() => setDraft((d) => ({ ...d, esta_activo: true }))}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${draft.esta_activo ? "bg-[var(--hover)] text-white" : "text-[var(--text-muted)]"}`}
+                    >
+                      Activo
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDraft((d) => ({ ...d, esta_activo: false, publico: false, destacado: false }))}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${!draft.esta_activo ? "bg-neutral-700 text-white" : "text-[var(--text-muted)]"}`}
+                    >
+                      Inactivo
+                    </button>
+                  </div>
+                  {draft.esta_activo && (
+                    <>
+                      <span className="mx-1 h-5 w-px bg-[var(--border)]" />
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <span className="text-xs text-[var(--text-muted)]">Visible</span>
+                        <button
+                          type="button"
+                          onClick={() => setDraft((d) => ({ ...d, publico: !d.publico }))}
+                          className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition ${draft.publico ? "bg-[var(--hover)]" : "bg-[var(--border)]"}`}
+                        >
+                          <span className={`inline-block h-3.5 w-3.5 rounded-full bg-white transition ${draft.publico ? "translate-x-[18px]" : "translate-x-0.5"}`} />
+                        </button>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <span className="text-xs text-[var(--text-muted)]">Destacado</span>
+                        <button
+                          type="button"
+                          onClick={() => setDraft((d) => ({ ...d, destacado: !d.destacado }))}
+                          className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition ${draft.destacado ? "bg-[var(--hover)]" : "bg-[var(--border)]"}`}
+                        >
+                          <span className={`inline-block h-3.5 w-3.5 rounded-full bg-white transition ${draft.destacado ? "translate-x-[18px]" : "translate-x-0.5"}`} />
+                        </button>
+                      </label>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-[var(--border)] pt-6">

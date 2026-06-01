@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, Filter, Globe, Loader2, PencilLine, Plus, Search, ShieldCheck, Trash2, Undo2, UserCog, UserRound, Users, X, AlertCircle } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Filter, Globe, Loader2, PencilLine, Plus, Search, ShieldCheck, Trash2, Undo2, UserCog, UserRound, Users, X, AlertCircle } from "lucide-react";
 import { ConfirmationModal } from "@/components/dashboard/confirmation-modal";
 import { Pagination } from "@/components/dashboard/pagination";
 import { CloudinaryUpload } from "@/components/dashboard/cloudinary-upload";
@@ -48,6 +48,7 @@ export function EmployeesManagement({ kpiActivos, kpiAdmins, kpiEmpleados }: Pro
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -383,15 +384,15 @@ export function EmployeesManagement({ kpiActivos, kpiAdmins, kpiEmpleados }: Pro
                         <div className="mt-1 flex flex-wrap items-center gap-1.5">
                           <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase ${
                             employee.role === "admin"
-                              ? "bg-[var(--foreground)]/10 text-[var(--foreground)]"
+                              ? "bg-purple-500/10 text-purple-500"
                               : "bg-[var(--hover)]/10 text-[var(--hover)]"
                           }`}>
                             {employee.role}
                           </span>
                           <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
                             employee.status === "Activo"
-                              ? "bg-[var(--hover)]/15 text-[var(--hover)]"
-                              : "bg-[var(--warning)]/15 text-[var(--warning)]"
+                              ? "bg-emerald-500/10 text-emerald-500"
+                              : "bg-[var(--destructive)]/10 text-[var(--destructive)]"
                           }`}>
                             {employee.status}
                           </span>
@@ -403,7 +404,7 @@ export function EmployeesManagement({ kpiActivos, kpiAdmins, kpiEmpleados }: Pro
                         {employee.specialties.map((specialty) => (
                           <span
                             key={specialty}
-                            className="rounded-full bg-[var(--background)] px-2 py-0.5 text-[11px] font-medium text-[var(--text-muted)]"
+                            className="rounded-full bg-[var(--hover)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--hover)]"
                           >
                             {specialty}
                           </span>
@@ -531,6 +532,15 @@ export function EmployeesManagement({ kpiActivos, kpiAdmins, kpiEmpleados }: Pro
                     </button>
                   )}
                 </div>
+                {mode === "edit" && selectedEmployee && (
+                  <div className="mt-4 w-full space-y-3 rounded-2xl border border-[var(--border)] bg-[var(--background)] px-4 py-5 text-center">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">Creado</p>
+                    <p className="text-xs text-[var(--foreground)]">{formatDate(selectedEmployee.creadoEn)}</p>
+                    <div className="my-2 h-px bg-[var(--border)]" />
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">Actualizado</p>
+                    <p className="text-xs text-[var(--foreground)]">{formatDate(selectedEmployee.actualizadoEn)}</p>
+                  </div>
+                )}
             </div>
 
             <div className="space-y-4">
@@ -605,41 +615,56 @@ export function EmployeesManagement({ kpiActivos, kpiAdmins, kpiEmpleados }: Pro
                     placeholder="@usuario o url"
                   />
                 </Field>
-                {mode === "edit" && selectedEmployee && (
-                  <>
-                    <Field label="Creado">
-                      <div className={inputClassName + " bg-[var(--background)] text-[var(--text-muted)]"}>
-                        {formatDate(selectedEmployee.creadoEn)}
-                      </div>
-                    </Field>
-                    <Field label="Actualizado">
-                      <div className={inputClassName + " bg-[var(--background)] text-[var(--text-muted)]"}>
-                        {formatDate(selectedEmployee.actualizadoEn)}
-                      </div>
-                    </Field>
-                  </>
-                )}
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <Field label={`Clave ${mode === "edit" ? "(dejar en blanco para no cambiar)" : ""}`}>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                    className={inputClassName}
-                    placeholder={mode === "create" ? "Clave de acceso" : "Nueva clave (opcional)"}
-                  />
-                </Field>
-                <Field label="Confirmar clave">
-                  <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(event) => setConfirmPassword(event.target.value)}
-                    className={inputClassName}
-                    placeholder={mode === "create" ? "Repetir clave de acceso" : "Repetir nueva clave"}
-                  />
-                </Field>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--background)] px-4 py-3">
+                  <ShieldCheck size={18} className="text-[var(--text-muted)] shrink-0" />
+                  <div className="grid gap-2 flex-1 sm:grid-cols-2">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(event) => setPassword(event.target.value)}
+                      className={inputClassName}
+                      placeholder={mode === "create" ? "Clave de acceso" : "Nueva clave (opcional)"}
+                      autoComplete="new-password"
+                    />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(event) => setConfirmPassword(event.target.value)}
+                      className={inputClassName}
+                      placeholder={mode === "create" ? "Repetir clave" : "Repetir nueva clave"}
+                      autoComplete="new-password"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="shrink-0 text-[var(--text-muted)] transition hover:text-[var(--foreground)]"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                <div className="flex items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--background)] px-4 py-3">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] shrink-0">Estado</span>
+                  <div className="flex rounded-xl bg-[var(--background-secondary)] p-0.5">
+                    <button
+                      type="button"
+                      onClick={() => setDraft((d) => ({ ...d, esta_activo: true }))}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${draft.esta_activo ? "bg-[var(--hover)] text-white" : "text-[var(--text-muted)]"}`}
+                    >
+                      Activo
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDraft((d) => ({ ...d, esta_activo: false }))}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${!draft.esta_activo ? "bg-neutral-700 text-white" : "text-[var(--text-muted)]"}`}
+                    >
+                      Inactivo
+                    </button>
+                  </div>
+                </div>
               </div>
 
               {passwordError && (

@@ -1140,7 +1140,7 @@ export default function LandingPage({
             className="absolute bottom-0 left-0 right-0 h-[1px]"
             style={{ background: "var(--hover)" }}
           />
-          <div className="grid md:grid-cols-[1fr_1.2fr] gap-[1px]" style={{ background: "var(--hover)" }}>
+          <div className="grid md:grid-cols-[1fr_1.2fr] gap-[1px]" style={{ background: "var(--background)" }}>
             <div className="relative flex flex-col justify-center px-8 py-12 md:px-14 md:py-16 bg-neutral-950">
               <GreenCorner className="top-6 right-6" />
               <p className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--hover)" }}>
