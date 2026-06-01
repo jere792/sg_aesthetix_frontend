@@ -12,7 +12,7 @@ export default async function ProductosPage({ params }: ProductosPageProps) {
 
   const { data: products } = await supabase
     .from("productos")
-    .select("id, nombre, descripcion, imagen_url, precio_venta, esta_activo, categoria_producto_id, categoria_producto(nombre)")
+    .select("id, nombre, descripcion, imagen_url, precio_venta, puntos_otorgados, esta_activo, categoria_producto_id, categoria_producto(nombre)")
     .eq("esta_activo", true)
     .eq("publico", true)
     .order("categoria_producto_id", { ascending: true });
@@ -49,7 +49,7 @@ export default async function ProductosPage({ params }: ProductosPageProps) {
               nombre={product.nombre}
               descripcion={product.descripcion ?? ""}
               precio={product.precio_venta}
-              puntos={Math.floor(product.precio_venta / 2)}
+              puntos={product.puntos_otorgados ?? 0}
               imagenUrl={product.imagen_url ?? undefined}
               categoriaNombre={categoryName}
               featured={index === 0}

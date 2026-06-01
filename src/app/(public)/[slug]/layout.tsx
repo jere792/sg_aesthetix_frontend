@@ -123,12 +123,7 @@ export default async function PublicLandingLayout({
               >
                 Horarios disponibles
               </Link>
-              <span className="text-[var(--text-muted)] cursor-default">
-                App móvil{" "}
-                <span className="inline-flex ml-1 py-0.5 px-2 bg-[var(--background)] text-[10px] rounded-full -rotate-1">
-                  pronto
-                </span>
-              </span>
+    
             </div>
           </div>
 
