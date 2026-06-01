@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState, useCallback } from "react";
+import { Globe } from "lucide-react";
+import { StoreStatus } from "@/components/public/store-status";
 import { useCart } from "@/contexts/cart-context";
 
 type Service = {
@@ -32,6 +34,19 @@ type Barber = {
   nombre: string;
   specialties: string[];
   imagenUrl: string | null;
+  instagram: string | null;
+  facebook: string | null;
+  tiktok: string | null;
+};
+
+type Location = {
+  name: string;
+  address: string;
+  hours: string;
+  phone: string;
+  mapsUrl: string;
+  lat: number;
+  lng: number;
 };
 
 type LandingPageProps = {
@@ -40,19 +55,10 @@ type LandingPageProps = {
   products: ProductItem[];
   galleryItems: GalleryItem[];
   barbers: Barber[];
+  locales: Location[];
 };
 
-const locations = [
-  {
-    name: "San Borja",
-    address: "Av. Aviación 3464 · San Borja",
-    hours: "Lun – Sáb · 8:00 AM – 8:00 PM",
-    phone: "+51 999 999 999",
-    mapsUrl: "https://maps.google.com/?q=Av.+Aviación+3464,+San+Borja,+Lima",
-    lat: -12.0943,
-    lng: -77.0073,
-  },
-];
+
 
 const testimonials = [
   {
@@ -276,11 +282,11 @@ function ProductCarousel({ products }: { products: ProductItem[] }) {
   return (
     <div className="relative overflow-hidden" style={{ background: "var(--hover)" }}>
       <div
-        className="grid md:grid-cols-[1fr_1fr] gap-[1px]"
+        className="grid md:grid-cols-[1fr_1fr] gap-[1px] h-[400px] md:h-[440px]"
         style={{ background: "var(--hover)" }}
       >
         {/* Imagen */}
-        <div className="relative overflow-hidden bg-[var(--background-secondary)] min-h-[260px] md:min-h-[320px]">
+        <div className="relative overflow-hidden bg-[var(--background-secondary)]">
           {product.imagenUrl ? (
             <img
               src={product.imagenUrl}
@@ -297,7 +303,7 @@ function ProductCarousel({ products }: { products: ProductItem[] }) {
         </div>
 
         {/* Info */}
-        <div className="flex flex-col justify-center bg-[var(--background-secondary)] px-8 py-10 md:px-12 md:py-12">
+        <div className="flex flex-col justify-center bg-[var(--background-secondary)] px-8 py-6 md:px-12 md:py-8 overflow-y-auto">
           <div className="mb-3 h-[2px] w-6" style={{ background: "var(--hover)" }} />
           <p
             className="text-[12px] font-semibold uppercase tracking-[0.2em]"
@@ -367,13 +373,174 @@ function ProductCarousel({ products }: { products: ProductItem[] }) {
   );
 }
 
+function BarberCarousel({ barbers }: { barbers: Barber[] }) {
+  const [current, setCurrent] = useState(0);
+  const total = barbers.length;
+
+  const prev = useCallback(
+    () => setCurrent((c) => (c === 0 ? total - 1 : c - 1)),
+    [total],
+  );
+  const next = useCallback(
+    () => setCurrent((c) => (c === total - 1 ? 0 : c + 1)),
+    [total],
+  );
+
+  if (total === 0) return null;
+
+  const barber = barbers[current];
+  const hasSocial = barber.instagram || barber.facebook || barber.tiktok;
+
+  return (
+    <div
+      className="grid gap-[1px] md:grid-cols-2"
+      style={{ background: "var(--hover)" }}
+    >
+      {/* Foto */}
+      <div className="relative overflow-hidden bg-neutral-900 min-h-[280px] md:min-h-[360px]">
+        {barber.imagenUrl ? (
+          <img
+            src={barber.imagenUrl}
+            alt={barber.nombre}
+            className="h-full w-full object-cover absolute inset-0"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-7xl font-black text-white/30">
+              {barber.nombre.charAt(0)}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Info */}
+      <div className="flex flex-col justify-center bg-[var(--background-secondary)] px-8 py-10 md:px-12 md:py-12">
+        <div className="mb-3 h-[2px] w-6" style={{ background: "var(--hover)" }} />
+        <p
+          className="text-[12px] font-semibold uppercase tracking-[0.2em]"
+          style={{ color: "var(--hover)" }}
+        >
+          Barber {String(current + 1).padStart(2, "0")} de{" "}
+          {String(total).padStart(2, "0")}
+        </p>
+        <h3 className="mt-2 text-xl font-black uppercase tracking-tight leading-tight text-[var(--foreground)] md:text-2xl">
+          {barber.nombre}
+        </h3>
+        {barber.specialties.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {barber.specialties.map((s) => (
+              <span
+                key={s}
+                className="inline-block px-3 py-1 text-[10px] font-semibold uppercase tracking-widest"
+                style={{
+                  background: "color-mix(in srgb, var(--hover) 12%, transparent)",
+                  color: "var(--hover)",
+                }}
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+        )}
+        {hasSocial && (
+          <div className="mt-5 flex items-center gap-4">
+            {barber.instagram && (
+              <a
+                href={barber.instagram.startsWith("http") ? barber.instagram : `https://instagram.com/${barber.instagram.replace("@", "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-sm text-[var(--text-muted)] transition hover:text-[var(--hover)]"
+              >
+                <Globe size={15} />
+                Instagram
+              </a>
+            )}
+            {barber.facebook && (
+              <a
+                href={barber.facebook.startsWith("http") ? barber.facebook : `https://facebook.com/${barber.facebook}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-sm text-[var(--text-muted)] transition hover:text-[var(--hover)]"
+              >
+                <Globe size={15} />
+                Facebook
+              </a>
+            )}
+            {barber.tiktok && (
+              <a
+                href={barber.tiktok.startsWith("http") ? barber.tiktok : `https://tiktok.com/@${barber.tiktok.replace("@", "")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-sm text-[var(--text-muted)] transition hover:text-[var(--hover)]"
+              >
+                <Globe size={15} />
+                TikTok
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Navegación */}
+      <div className="col-span-full flex items-center justify-between bg-[var(--background-secondary)] px-8 py-4 md:px-12">
+        <div className="flex items-center gap-2">
+          {barbers.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              className="h-1.5 transition-all duration-300"
+              style={{
+                width: i === current ? 24 : 6,
+                background: i === current ? "var(--hover)" : "rgba(0,0,0,0.15)",
+              }}
+              aria-label={`Barber ${i + 1}`}
+            />
+          ))}
+        </div>
+        <div className="flex gap-1.5">
+          <button
+            onClick={prev}
+            className="h-8 w-8 flex items-center justify-center text-sm border transition hover:opacity-70"
+            style={{ borderColor: "color-mix(in srgb, var(--hover) 25%, transparent)", color: "var(--hover)" }}
+            aria-label="Anterior"
+          >
+            ←
+          </button>
+          <button
+            onClick={next}
+            className="h-8 w-8 flex items-center justify-center text-sm border transition hover:opacity-70"
+            style={{ borderColor: "color-mix(in srgb, var(--hover) 25%, transparent)", color: "var(--hover)" }}
+            aria-label="Siguiente"
+          >
+            →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const defaultLocales: Location[] = [
+  {
+    name: "San Borja",
+    address: "Av. Aviación 3464 · San Borja",
+    hours: "Lun – Sáb · 8:00 AM – 8:00 PM",
+    phone: "+51 999 999 999",
+    mapsUrl: "https://maps.google.com/?q=Av.+Aviaci%C3%B3n+3464,+San+Borja,+Lima",
+    lat: -12.0943,
+    lng: -77.0073,
+  },
+];
+
 export default function LandingPage({
   slug,
   services,
   products,
   galleryItems,
   barbers,
+  locales: localesProp,
 }: LandingPageProps) {
+  const locales = localesProp.length > 0 ? localesProp : defaultLocales;
   const WA_NUMBER = "5491112345678";
   const WA_MESSAGE = encodeURIComponent("Hola, quiero reservar un turno.");
 
@@ -419,9 +586,12 @@ export default function LandingPage({
               className="mb-4 h-[3px] w-10 rounded-full"
               style={{ background: "var(--hover)" }}
             />
-            <p className="mb-3 text-xs font-semibold tracking-[0.2em] uppercase text-[var(--text-muted)]">
-              San Miguel · Barbería
-            </p>
+            <div className="mb-3 flex items-center gap-3">
+              <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--text-muted)]">
+                San Miguel · Barbería
+              </p>
+              <StoreStatus />
+            </div>
             <h1 className="text-3xl font-black uppercase leading-none tracking-tight text-[var(--foreground)]">
               Redefi&shy;niendo
               <br />
@@ -461,12 +631,15 @@ export default function LandingPage({
                 className="mb-4 h-[3px] w-10 rounded-full"
                 style={{ background: "var(--hover)" }}
               />
-              <p
-                className="mb-3 text-xs font-semibold tracking-[0.2em] uppercase"
-                style={{ color: "var(--hover)" }}
-              >
-                San Miguel · Barbería
-              </p>
+              <div className="mb-3 flex items-center gap-3">
+                <p
+                  className="text-xs font-semibold tracking-[0.2em] uppercase"
+                  style={{ color: "var(--hover)" }}
+                >
+                  San Miguel · Barbería
+                </p>
+                <StoreStatus />
+              </div>
               <h1 className="text-4xl font-black uppercase leading-none tracking-tight text-[var(--foreground)] xl:text-5xl">
                 Redefi
                 <br />
@@ -501,20 +674,25 @@ export default function LandingPage({
                 style={{ height: 160, width: 160, objectFit: "contain" }}
               />
             </div>
-            <div className="flex flex-col justify-center bg-neutral-900 px-10 py-8 text-white">
+            <a
+              href="https://www.instagram.com/zonafade_barber/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col justify-center bg-neutral-900 px-10 py-8 text-white transition hover:opacity-80"
+            >
               <p
                 className="text-[10px] font-semibold tracking-[0.18em] uppercase"
                 style={{ color: "var(--hover)" }}
               >
-                Promedio
+                Instagram
               </p>
-              <p className="mt-2 text-6xl font-black leading-none tracking-tight">
-                4.9
+              <p className="mt-2 text-4xl font-black leading-none tracking-tight">
+                @zonafade_barber
               </p>
               <p className="mt-2 text-[10px] tracking-widest uppercase text-white/40">
-                Puntuación
+                Síguenos
               </p>
-            </div>
+            </a>
             <div className="relative flex flex-col justify-center bg-[var(--background)] px-10 py-8">
               <GreenCorner className="bottom-4 right-4 rotate-180" />
               <p
@@ -636,116 +814,117 @@ export default function LandingPage({
       </section>
 
       {/* ── NUESTROS LOCALES ─────────────────────────────────────────── */}
-      <section id="locales" className="-mx-6 space-y-0">
-        <div className="px-6 pb-6 space-y-2">
-          <SectionLabel>Locales</SectionLabel>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight">
-            Nuestro local
-          </h2>
-        </div>
-        <div
-          className="grid gap-px md:grid-cols-[1fr_1.4fr]"
-          style={{ background: "var(--hover)" }}
-        >
-          <div className="bg-[var(--background-secondary)]">
-            {locations.map((loc, i) => (
-              <div
-                key={loc.name}
-                className={`p-8 ${i === 0 ? "bg-neutral-900 text-white" : "bg-[var(--background-secondary)]"}`}
-              >
+      {locales.length > 0 && (
+        <section id="locales" className="-mx-6 space-y-0">
+          <div className="px-6 pb-6 space-y-2">
+            <SectionLabel>Locales</SectionLabel>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight">
+              Nuestro local
+            </h2>
+          </div>
+          <div
+            className="grid gap-px md:grid-cols-[1fr_1.4fr]"
+            style={{ background: "var(--hover)" }}
+          >
+            <div className="bg-[var(--background-secondary)]">
+              {locales.map((loc, i) => (
                 <div
-                  className={`mb-5 inline-flex h-7 w-7 items-center justify-center text-xs font-black`}
-                  style={{
-                    background: i === 0 ? "var(--hover)" : "var(--background-secondary)",
-                    color: "white",
-                  }}
+                  key={loc.name}
+                  className={`p-8 ${i === 0 ? "bg-neutral-900 text-white" : "bg-[var(--background-secondary)]"}`}
                 >
-                  {String(i + 1).padStart(2, "0")}
-                </div>
-                <h3 className="text-2xl font-black uppercase tracking-tight">
-                  {loc.name}
-                </h3>
-                <p
-                  className={`mt-2 text-xs font-semibold uppercase tracking-widest ${i === 0 ? "text-white/40" : "text-[var(--text-muted)]"}`}
-                >
-                  {loc.address}
-                </p>
-                <div className="mt-6 space-y-2">
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`text-xs font-semibold uppercase tracking-widest ${i === 0 ? "text-white/30" : "text-[var(--text-muted)]"}`}
-                    >
-                      Horario
-                    </span>
-                    <span
-                      className={`text-sm font-bold uppercase tracking-tight ${i === 0 ? "text-white" : "text-[var(--foreground)]"}`}
-                    >
-                      {loc.hours}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`text-xs font-semibold uppercase tracking-widest ${i === 0 ? "text-white/30" : "text-[var(--text-muted)]"}`}
-                    >
-                      Tel
-                    </span>
-                    <a
-                      href={`tel:${loc.phone.replace(/\s/g, "")}`}
-                      className={`text-sm font-bold uppercase tracking-tight transition hover:opacity-70 ${i === 0 ? "text-white" : "text-[var(--foreground)]"}`}
-                    >
-                      {loc.phone}
-                    </a>
-                  </div>
-                </div>
-                <div className="mt-8 flex items-center gap-3">
-                  <a
-                    href={loc.mapsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block border px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] transition hover:opacity-75"
+                  <div
+                    className={`mb-5 inline-flex h-7 w-7 items-center justify-center text-xs font-black`}
                     style={{
-                      borderColor: i === 0 ? "color-mix(in srgb, var(--hover) 37.5%, transparent)" : "var(--hover)",
-                      color: i === 0 ? "white" : "var(--hover)",
+                      background: i === 0 ? "var(--hover)" : "var(--background-secondary)",
+                      color: "white",
                     }}
                   >
-                    Ver en mapa
-                  </a>
-                  <Link
-                    href={`/${slug}/reservar`}
-                    className="inline-block px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] transition hover:opacity-75 text-white"
-                    style={{ background: "var(--hover)" }}
+                    {String(i + 1).padStart(2, "0")}
+                  </div>
+                  <h3 className="text-2xl font-black uppercase tracking-tight">
+                    {loc.name}
+                  </h3>
+                  <p
+                    className={`mt-2 text-xs font-semibold uppercase tracking-widest ${i === 0 ? "text-white/40" : "text-[var(--text-muted)]"}`}
                   >
-                    Reservar
-                  </Link>
+                    {loc.address}
+                  </p>
+                  <div className="mt-6 space-y-2">
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`text-xs font-semibold uppercase tracking-widest ${i === 0 ? "text-white/30" : "text-[var(--text-muted)]"}`}
+                      >
+                        Horario
+                      </span>
+                      <span
+                        className={`text-sm font-bold uppercase tracking-tight ${i === 0 ? "text-white" : "text-[var(--foreground)]"}`}
+                      >
+                        {loc.hours}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={`text-xs font-semibold uppercase tracking-widest ${i === 0 ? "text-white/30" : "text-[var(--text-muted)]"}`}
+                      >
+                        Tel
+                      </span>
+                      <a
+                        href={`tel:${loc.phone.replace(/\s/g, "")}`}
+                        className={`text-sm font-bold uppercase tracking-tight transition hover:opacity-70 ${i === 0 ? "text-white" : "text-[var(--foreground)]"}`}
+                      >
+                        {loc.phone}
+                      </a>
+                    </div>
+                  </div>
+                  <div className="mt-8 flex items-center gap-3">
+                    <a
+                      href={loc.mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block border px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] transition hover:opacity-75"
+                      style={{
+                        borderColor: i === 0 ? "color-mix(in srgb, var(--hover) 37.5%, transparent)" : "var(--hover)",
+                        color: i === 0 ? "white" : "var(--hover)",
+                      }}
+                    >
+                      Ver en mapa
+                    </a>
+                    <Link
+                      href={`/${slug}/reservar`}
+                      className="inline-block px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.15em] transition hover:opacity-75 text-white"
+                      style={{ background: "var(--hover)" }}
+                    >
+                      Reservar
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-          <div className="relative min-h-[320px] overflow-hidden bg-[var(--background-secondary)] md:min-h-0">
-            <iframe
-              title="Ubicación del local"
-              src={`https://www.openstreetmap.org/export/embed.html?bbox=${locations[0].lng - 0.004},${locations[0].lat - 0.003},${locations[0].lng + 0.004},${locations[0].lat + 0.003}&layer=mapnik&marker=${locations[0].lat},${locations[0].lng}`}
-              className="h-full w-full border-0"
-              style={{ filter: "grayscale(1) contrast(1.1)" }}
-              loading="lazy"
-              allowFullScreen
-            />
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-6 py-5">
-              {/* Línea verde sobre el overlay */}
-              <div
-                className="mb-3 h-[2px] w-8"
-                style={{ background: "var(--hover)" }}
+              ))}
+            </div>
+            <div className="relative min-h-[320px] overflow-hidden bg-[var(--background-secondary)] md:min-h-0">
+              <iframe
+                title="Ubicación del local"
+                src={`https://www.openstreetmap.org/export/embed.html?bbox=${locales[0].lng - 0.004},${locales[0].lat - 0.003},${locales[0].lng + 0.004},${locales[0].lat + 0.003}&layer=mapnik&marker=${locales[0].lat},${locales[0].lng}`}
+                className="h-full w-full border-0"
+                style={{ filter: "grayscale(1) contrast(1.1)" }}
+                loading="lazy"
+                allowFullScreen
               />
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-white/50">
-                Local principal
-              </p>
-              <p className="mt-1 text-sm font-black uppercase tracking-tight text-white">
-                {locations[0].name} · {locations[0].address}
-              </p>
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-6 py-5">
+                <div
+                  className="mb-3 h-[2px] w-8"
+                  style={{ background: "var(--hover)" }}
+                />
+                <p className="text-[10px] font-semibold uppercase tracking-widest text-white/50">
+                  Local principal
+                </p>
+                <p className="mt-1 text-sm font-black uppercase tracking-tight text-white">
+                  {locales[0].name} · {locales[0].address}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ── NUESTROS BARBERS ──────────────────────────────────────────── */}
       {barbers.length > 0 && (
@@ -950,61 +1129,66 @@ export default function LandingPage({
           </h2>
         </div>
         <div
-          className="relative overflow-hidden p-8 sm:p-12 md:p-16"
-          style={{ background: "color-mix(in srgb, var(--hover) 85%, var(--background-secondary))" }}
+          className="relative overflow-hidden"
+          style={{ background: "var(--background-secondary)" }}
         >
-          <GreenCorner className="top-6 right-6" />
           <div
-            className="absolute top-0 left-0 right-0 h-[3px]"
+            className="absolute top-0 left-0 right-0 h-[1px]"
             style={{ background: "var(--hover)" }}
           />
-          <div className="relative z-10 max-w-2xl">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--hover)" }}>
-              Programa de fidelidad
-            </p>
-            <h3 className="mt-3 text-2xl font-black uppercase tracking-tight text-white md:text-3xl">
-              Cada visita suma
-            </h3>
-            <p className="mt-3 text-sm text-white/60 leading-relaxed">
-              Acumula puntos por cada servicio o producto que compres y canjéalos
-              por descuentos, productos gratis y más beneficios exclusivos.
-            </p>
-            <div className="mt-8 grid gap-4 sm:grid-cols-3">
-              <div className="border border-white/10 px-5 py-5">
-                <span className="text-2xl font-black text-white">1</span>
-                <p className="mt-1 text-[11px] font-semibold uppercase tracking-widest text-white/40">
-                  Reserva
-                </p>
-                <p className="mt-1 text-xs text-white/60">
-                  Agenda tu cita y ven al local.
-                </p>
-              </div>
-              <div className="border border-white/10 px-5 py-5">
-                <span className="text-2xl font-black text-white">2</span>
-                <p className="mt-1 text-[11px] font-semibold uppercase tracking-widest text-white/40">
-                  Acumula
-                </p>
-                <p className="mt-1 text-xs text-white/60">
-                  Gana puntos en cada compra que realices.
-                </p>
-              </div>
-              <div className="border border-white/10 px-5 py-5">
-                <span className="text-2xl font-black text-white">3</span>
-                <p className="mt-1 text-[11px] font-semibold uppercase tracking-widest text-white/40">
-                  Canjea
-                </p>
-                <p className="mt-1 text-xs text-white/60">
-                  Cambia tus puntos por recompensas exclusivas.
-                </p>
-              </div>
+          <div
+            className="absolute bottom-0 left-0 right-0 h-[1px]"
+            style={{ background: "var(--hover)" }}
+          />
+          <div className="grid md:grid-cols-[1fr_1.2fr] gap-[1px]" style={{ background: "var(--hover)" }}>
+            <div className="relative flex flex-col justify-center px-8 py-12 md:px-14 md:py-16 bg-neutral-950">
+              <GreenCorner className="top-6 right-6" />
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em]" style={{ color: "var(--hover)" }}>
+                Programa de fidelidad
+              </p>
+              <h3 className="mt-3 text-3xl font-black uppercase tracking-tight text-white md:text-4xl">
+                Cada visita suma
+              </h3>
+              <p className="mt-3 text-sm text-white/50 leading-relaxed max-w-md">
+                Acumula puntos por cada servicio o producto que compres y canjéalos
+                por descuentos, productos gratis y más beneficios exclusivos.
+              </p>
+              <Link
+                href={`/${slug}/promocion`}
+                className="mt-8 inline-block px-7 py-3 text-[10px] font-bold tracking-[0.15em] uppercase text-white transition hover:opacity-75 w-fit"
+                style={{ background: "var(--hover)" }}
+              >
+                Ver recompensas
+              </Link>
             </div>
-            <Link
-              href={`/${slug}/promocion`}
-              className="mt-8 inline-block px-7 py-3 text-[10px] font-bold tracking-[0.15em] uppercase text-white transition hover:opacity-75"
-              style={{ background: "var(--hover)" }}
-            >
-              Ver recompensas
-            </Link>
+            <div className="flex flex-col justify-center gap-6 bg-[var(--background-secondary)] px-8 py-12 md:px-14 md:py-16">
+              {[
+                { num: "01", label: "Reserva", desc: "Agenda tu cita y ven al local." },
+                { num: "02", label: "Acumula", desc: "Gana puntos en cada compra que realices." },
+                { num: "03", label: "Canjea", desc: "Cambia tus puntos por recompensas exclusivas." },
+              ].map((step) => (
+                <div key={step.num} className="flex items-start gap-5 group">
+                  <span
+                    className="text-3xl font-black leading-none tabular-nums shrink-0 transition-colors duration-300"
+                    style={{ color: "var(--hover)" }}
+                  >
+                    {step.num}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <div
+                      className="mb-2 h-[2px] w-5 transition-all duration-300 group-hover:w-8"
+                      style={{ background: "var(--hover)" }}
+                    />
+                    <p className="font-black uppercase tracking-tight text-[var(--foreground)]">
+                      {step.label}
+                    </p>
+                    <p className="mt-0.5 text-sm text-[var(--text-muted)] leading-relaxed">
+                      {step.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
