@@ -445,25 +445,25 @@ function BarberCarousel({ barbers }: { barbers: Barber[] }) {
         {hasSocial && (
           <div className="mt-5 flex items-center gap-4">
             {barber.instagram && (
-              <a
-                href={barber.instagram.startsWith("http") ? barber.instagram : `https://instagram.com/${barber.instagram.replace("@", "")}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-sm text-[var(--text-muted)] transition hover:text-[var(--hover)]"
-              >
-                <Globe size={15} />
-                Instagram
-              </a>
+                          <a
+                            href={barber.instagram.startsWith("http") ? barber.instagram : `https://instagram.com/${barber.instagram.replace("@", "")}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="transition hover:text-[var(--hover)]"
+                            title="Instagram"
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><line x1="18" y1="5.5" x2="18.01" y2="5.5"/></svg>
+                          </a>
             )}
             {barber.facebook && (
               <a
                 href={barber.facebook.startsWith("http") ? barber.facebook : `https://facebook.com/${barber.facebook}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-sm text-[var(--text-muted)] transition hover:text-[var(--hover)]"
+                className="transition hover:text-[var(--hover)]"
+                title="Facebook"
               >
-                <Globe size={15} />
-                Facebook
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
               </a>
             )}
             {barber.tiktok && (
@@ -471,10 +471,10 @@ function BarberCarousel({ barbers }: { barbers: Barber[] }) {
                 href={barber.tiktok.startsWith("http") ? barber.tiktok : `https://tiktok.com/@${barber.tiktok.replace("@", "")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-sm text-[var(--text-muted)] transition hover:text-[var(--hover)]"
+                className="transition hover:text-[var(--hover)]"
+                title="TikTok"
               >
-                <Globe size={15} />
-                TikTok
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
               </a>
             )}
           </div>
@@ -981,6 +981,43 @@ export default function LandingPage({
                             {s}
                           </span>
                         ))}
+                      </div>
+                    )}
+                    {(barber.instagram || barber.facebook || barber.tiktok) && (
+                      <div className="mt-2 flex flex-wrap items-center gap-3 text-[var(--text-muted)]">
+                        {barber.instagram && (
+                          <a
+                            href={barber.instagram.startsWith("http") ? barber.instagram : `https://instagram.com/${barber.instagram.replace("@", "")}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="transition hover:text-[var(--hover)]"
+                            title="Instagram"
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><line x1="18" y1="5.5" x2="18.01" y2="5.5"/></svg>
+                          </a>
+                        )}
+                        {barber.facebook && (
+                          <a
+                            href={barber.facebook.startsWith("http") ? barber.facebook : `https://facebook.com/${barber.facebook}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="transition hover:text-[var(--hover)]"
+                            title="Facebook"
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                          </a>
+                        )}
+                        {barber.tiktok && (
+                          <a
+                            href={barber.tiktok.startsWith("http") ? barber.tiktok : `https://tiktok.com/@${barber.tiktok.replace("@", "")}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="transition hover:text-[var(--hover)]"
+                            title="TikTok"
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+                          </a>
+                        )}
                       </div>
                     )}
                   </div>
